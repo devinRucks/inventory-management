@@ -1,0 +1,51 @@
+$off-white: #F5F5F5;
+$teal: #056571;
+
+#Add {
+     padding: 30px 35px;
+     text-align: center;
+     height: 100vh;
+
+     #item-info-container {
+          height: 300px;
+          width: 100%;
+          border: 2px #333 solid;
+
+          #input-container {
+               display: flex;
+               flex-direction: row;
+               align-items: center;
+               justify-content: flex-start;
+               padding: 5px;
+
+               .info-label { font-size: 26px; }
+
+               .info-input {
+                    font-size: 20px;
+                    margin: 0px 20px;
+                    height: 30px;
+
+                    &.number { width: 50px;}
+                    &.text { width: 120px;}
+               }
+
+               .submit-btn {
+                    height: 35px;
+                    width: 85px;
+                    margin-left: 20px;
+                    outline: none;
+                    cursor: pointer;
+                    font-size: 15px;
+                    border-radius: 5px;
+                    background: $teal;
+                    color: $off-white;
+
+                    &.add-btn {
+                         margin-top: 15px;
+                    }
+               }
+          }
+
+     }
+}
+

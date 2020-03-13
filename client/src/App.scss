@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
+
+$main-BGcolor: #F5F5F5;
+$sidebar-BGcolor: #056571;
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+#App {
+    font-family: 'Source Sans Pro', sans-serif;
+    background: $main-BGcolor;
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    width: 100vw;
+
+    #sidebar-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        padding-top: 25px;
+        background: $sidebar-BGcolor;
+        height: 100%;
+        width: 20%;
+
+        .tab {
+            font-size: 25px;
+            padding: 10px 20px;
+            margin: 5px 0;
+            border-bottom-left-radius: 5px;
+            border-top-left-radius: 5px;
+            cursor: pointer;
+            color: #fff;
+        }
+    }
+
+    #content-container {
+        height: 100%;
+        width: 80%;
+    }
+}
+
+

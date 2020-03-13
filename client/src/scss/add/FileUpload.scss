@@ -1,0 +1,29 @@
+$off-white: #F5F5F5;
+$teal: #056571;
+
+
+#fileupload-container {
+     display: flex;
+     flex-direction: row;
+     align-items: center;
+     margin-top: 20px;
+     padding-left: 5px;
+
+     .label { font-size: 26px; }
+
+     input {
+          display: none;
+     }
+
+     .filename {
+          border: 1px #333 solid;
+          white-space: nowrap;
+          overflow: hidden;
+          font-size: 14px;
+          margin-left: 30px;
+          height: 22px;
+          width: 100px;
+     }
+
+     .upload-btn { margin-left: 20px; }
+}
