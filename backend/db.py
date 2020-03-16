@@ -20,21 +20,22 @@ def createTable():
      item TEXT UNIQUE,
      quantity INTEGER DEFAULT 1,
      row INTEGER,
-     column INTEGER
+     column INTEGER,
+     img_id TEXT
      )""")
 
     conn.commit()
     conn.close()
 
 
-def addItem(itemName, quantity, row, column):
+def addItem(itemName, quantity, row, column, img_id):
     conn = makeConnection()
     db = conn.cursor()
 
     insertNewItem = """
-               INSERT INTO inventory (item, quantity, row, column)
-               VALUES ('{}', '{}', '{}', '{}')
-               """.format(itemName, quantity, row, column)
+               INSERT INTO inventory (item, quantity, row, column, img_id)
+               VALUES ('{}', '{}', '{}', '{}', '{}')
+               """.format(itemName, quantity, row, column, img_id)
 
     increaseQuantityIfExists = """
                UPDATE inventory SET quantity = quantity + '{}' WHERE item = '{}'

@@ -1,8 +1,10 @@
 import React from 'react';
-import '../../scss/add/Add.scss'
-import axios from 'axios'
 import { Input, Button } from '@material-ui/core'
-import FileUpload from '../add/FileUpload';
+import axios from 'axios'
+import '../../scss/Main.scss'
+import FileUpload from './FileUpload';
+import Msg from '../../utils/Msg'
+// import ItemPreview from './ItemPreview'
 
 export default class Add extends React.Component {
      constructor(props) {
@@ -12,8 +14,13 @@ export default class Add extends React.Component {
                itemQuantity: 0,
                itemRow: 0,
                itemColumn: 0,
+               image: '',
+               imageData: '',
+               imageName: '',
                showInputs: false,
-               itemExists: false
+               itemExists: false,
+               showMsg: false,
+               addItemSuccess: false
           }
      }
 
@@ -33,25 +40,66 @@ export default class Add extends React.Component {
                .then(result => {
                     this.setState({
                          showInputs: true,
-                         itemExists: result
+                         itemExists: result,
+                         showMsg: false
                     })
                })
                .catch(err => console.log(err))
      }
 
      addItem = () => {
+          const { itemName, itemQuantity, itemRow, itemColumn, imageData, imageName } = this.state;
+
+          axios.post('/addItem', {
+               itemName,
+               itemQuantity,
+               itemRow,
+               itemColumn,
+               imageName
+          })
+               .then(res => res.data)
+               .then(result => {
+                    if (result) {
+                         this.setState({
+                              showInputs: false,
+                              addItemSuccess: true,
+                              showMsg: true
+                         })
+                    }
+                    console.log(result)
+               })
+               .catch(err => {
+                    this.setState({ showMsg: true, addItemSuccess: false })
+                    console.log(err)
+               })
+
+          let file = imageData
+          console.log(file)
+          const formData = new FormData();
+          formData.append("file", file)
+
+          axios.post('/uploadImage', formData, {
+               headers: {
+                    'Content-Type': 'multipart/form-data'
+               }
+          })
 
      }
 
      handleUpload = (e) => {
-          console.log(e.target.files[0].name)
+          this.setState({
+               imageData: e.target.files[0],
+               image: URL.createObjectURL(e.target.files[0]),
+               imageName: e.target.files[0].name
+          })
      }
 
 
      render() {
-          const { showInputs, itemExists } = this.state
+          const { showInputs, itemExists, addItemSuccess, showMsg } = this.state
 
           const renderNewItemInfo = () => {
+               // if the item is not in the inventory, display inputs for setting the row and column location
                if (!itemExists) {
                     return (
                          <>
@@ -80,10 +128,10 @@ export default class Add extends React.Component {
                }
           }
           return (
-               <div id="Add">
+               <div id="Add-component">
                     <section id="item-info-container">
                          <div id="input-container">
-                              <label className="info-label">Item:</label>
+                              <label className="info-label">Add Item:</label>
                               <Input
                                    className="info-input text"
                                    name="itemName"
@@ -124,6 +172,7 @@ export default class Add extends React.Component {
                                    </div>
                               </>
                          }
+                         {showMsg && < Msg success={addItemSuccess} />}
                     </section>
                </div>
           );

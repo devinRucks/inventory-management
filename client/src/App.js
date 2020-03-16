@@ -1,41 +1,48 @@
 import React from 'react';
 import './App.scss';
 import Add from './components/add/Add'
-// import * as utils from './utils/styling'
+import Remove from './components/remove/Remove'
+import * as utils from './utils/styling'
 
 
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            tabs: ['Locate', 'Add', 'Remove', 'Edit', 'View Inventory']
+            tabs: ['Locate', 'Add', 'Remove', 'Edit', 'View Inventory'],
+            activeTab: 'Locate'
         }
     }
 
-    handleTabClick(tabIndex) {
-        console.log(tabIndex)
+    handleTabClick = (e) => {
+        this.setState({ activeTab: e.target.id })
     }
 
-
+    tabActive = (tabName) => {
+        if (tabName === this.state.activeTab) return true
+        else return false
+    }
 
     render() {
-        const { tabs } = this.state;
+        const { tabs, activeTab } = this.state;
         return (
             <div id="App">
                 <section id="sidebar-container">
                     {tabs.map((tab, index) =>
                         <div className="tab"
                             key={index}
-                            onClick={() => this.handleTabClick(index)}>
+                            id={tab}
+                            style={activeTab === tab ? utils.tabSelectedStyling : {}}
+                            onClick={this.handleTabClick}>
                             {tab}
                         </div>
                     )}
                 </section>
                 <section id="content-container">
-
-                    < Add />
+                    {this.tabActive('Add') && < Add />}
+                    {this.tabActive('Remove') && < Remove />}
                 </section>
-            </div>
+            </div >
         );
     }
 }

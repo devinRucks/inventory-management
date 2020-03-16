@@ -1,0 +1,34 @@
+#itemPreview-container {
+     display: flex;
+     flex-direction: row;
+     align-items: center;
+     justify-content: space-evenly;
+     border: 1px red solid;
+
+     #image-container {
+          height: 125px;
+          width: 125px;
+          border: 1px #333 solid;
+          border-radius: 50%;
+
+          .image {
+               
+          }
+     }
+
+     #itemName-container {
+          border: 1px red solid;
+
+          .itemName {
+               font-size: 25px;
+          }
+     }
+
+     #itemQuantity-contianer {
+          border: 1px red solid;
+
+          .itemQuantity {
+
+          }
+     }
+}
