@@ -3,6 +3,7 @@ import './App.scss';
 import Add from './components/add/Add'
 import Remove from './components/remove/Remove'
 import * as utils from './utils/styling'
+import Inventory from './components/inventory/Inventory';
 
 
 class App extends React.Component {
@@ -41,6 +42,7 @@ class App extends React.Component {
                 <section id="content-container">
                     {this.tabActive('Add') && < Add />}
                     {this.tabActive('Remove') && < Remove />}
+                    {this.tabActive('View Inventory') && < Inventory />}
                 </section>
             </div >
         );

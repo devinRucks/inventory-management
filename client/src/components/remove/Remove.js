@@ -2,7 +2,7 @@ import React from 'react'
 import { Input, Button } from '@material-ui/core'
 import axios from 'axios'
 import '../../scss/Main.scss'
-import Msg from '../../utils/Msg'
+import { RemoveItemMsg } from '../Msg'
 
 
 export default class Remove extends React.Component {
@@ -38,11 +38,25 @@ export default class Remove extends React.Component {
      }
 
      removeItem = () => {
-
+          const { itemName, itemQuantity } = this.state;
+          axios.post('/removeItem', {
+               itemName, itemQuantity
+          })
+               .then(res => res.data)
+               .then(result => {
+                    this.setState({
+                         showMsg: true,
+                         removeItemSuccess: result
+                    })
+               })
+               .catch(err => {
+                    this.setState({ showMsg: true })
+                    console.log(err)
+               })
      }
 
      render() {
-          const { showMsg, itemExists, removeItemSuccess } = this.state;
+          const { itemQuantity, showMsg, itemExists, removeItemSuccess } = this.state;
 
           return (
                <div id="Remove-component">
@@ -72,6 +86,8 @@ export default class Remove extends React.Component {
                                              type="number"
                                              className="info-input number"
                                              name="itemQuantity"
+                                             value={itemQuantity}
+                                             inputProps={{ min: 0 }}
                                              onChange={this.onChange}
                                         />
                                    </div>
@@ -82,12 +98,12 @@ export default class Remove extends React.Component {
                                              color="primary"
                                              onClick={this.removeItem}
                                         >
-                                             Add
+                                             Remove
                                    </Button>
                                    </div>
                               </>
                          }
-                         {showMsg && < Msg success={removeItemSuccess} />}
+                         {showMsg && < RemoveItemMsg removeSuccess={removeItemSuccess} />}
                     </section>
                </div>
           )

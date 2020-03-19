@@ -1,0 +1,108 @@
+#itemPreview-container {
+     border: 1px #333 solid;
+     display: grid;
+     grid-template-areas: "image name quantity row column";
+     grid-template-columns: .5fr .5fr 1fr 1fr 1fr;
+     margin-bottom: 8px;
+     transition: all .15s ease-out;
+     width: 100%;
+     height: 150px;
+
+     &:hover {
+          transform: scale(1.02)
+     }
+
+     .horizontal-row {
+          background-color: black;
+          margin: 5px 0px;
+          border: none;
+          width: 80px;
+          height: 2px;
+     }
+
+     #itemImage-container {
+          grid-area: image;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .image-placeholder {
+               position: relative;
+               height: 115px;
+               width: 115px;
+               overflow: hidden;
+               border: 1px #333 solid;
+               border-radius: 50%;
+
+               .image {
+                    object-fit: cover;
+                    width: 100%;
+                    height: 100%;
+               }
+          }
+
+     }
+
+     #itemName-container {
+          grid-area: name;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          // border: 1px red solid;
+
+          .itemName {
+               padding-left: 10px;
+               font-size: 25px;
+          }
+     }
+
+     #itemQuantity-container {
+          grid-area: quantity;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          // border: 1px red solid;
+
+          .quantity-title {
+               font-size: 23px;
+          }
+          .itemQuantity {
+               font-size: 21px;
+          }
+     }
+
+     #itemRow-container {
+          grid-area: row;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          // border: 1px red solid;
+
+          .row-title {
+               font-size: 23px;
+          }
+
+          .itemRow {
+               font-size: 21px;
+          }
+     }
+
+     #itemColumn-container {
+          grid-area: column;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          // border: 1px red solid;
+
+          .column-title {
+               font-size: 23px;
+          }
+
+          .itemColumn {
+               font-size: 21px;
+          }
+     }
+}

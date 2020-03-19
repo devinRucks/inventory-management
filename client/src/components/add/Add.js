@@ -3,7 +3,7 @@ import { Input, Button } from '@material-ui/core'
 import axios from 'axios'
 import '../../scss/Main.scss'
 import FileUpload from './FileUpload';
-import Msg from '../../utils/Msg'
+import { AddItemMsg } from '../Msg'
 // import ItemPreview from './ItemPreview'
 
 export default class Add extends React.Component {
@@ -47,7 +47,8 @@ export default class Add extends React.Component {
                .catch(err => console.log(err))
      }
 
-     addItem = () => {
+     addItem = (e) => {
+          e.preventDefault()
           const { itemName, itemQuantity, itemRow, itemColumn, imageData, imageName } = this.state;
 
           axios.post('/addItem', {
@@ -59,17 +60,14 @@ export default class Add extends React.Component {
           })
                .then(res => res.data)
                .then(result => {
-                    if (result) {
-                         this.setState({
-                              showInputs: false,
-                              addItemSuccess: true,
-                              showMsg: true
-                         })
-                    }
-                    console.log(result)
+                    this.setState({
+                         showInputs: false,
+                         addItemSuccess: result,
+                         showMsg: true
+                    })
                })
                .catch(err => {
-                    this.setState({ showMsg: true, addItemSuccess: false })
+                    this.setState({ showMsg: true })
                     console.log(err)
                })
 
@@ -96,7 +94,7 @@ export default class Add extends React.Component {
 
 
      render() {
-          const { showInputs, itemExists, addItemSuccess, showMsg } = this.state
+          const { itemRow, itemColumn, itemQuantity, showInputs, itemExists, addItemSuccess, showMsg } = this.state
 
           const renderNewItemInfo = () => {
                // if the item is not in the inventory, display inputs for setting the row and column location
@@ -109,6 +107,8 @@ export default class Add extends React.Component {
                                         type="number"
                                         className="info-input number"
                                         name='itemRow'
+                                        value={itemRow}
+                                        inputProps={{ min: 0 }}
                                         onChange={this.onChange}
                                    />
                               </div>
@@ -119,6 +119,8 @@ export default class Add extends React.Component {
                                         type="number"
                                         className="info-input number"
                                         name='itemColumn'
+                                        value={itemColumn}
+                                        inputProps={{ min: 0 }}
                                         onChange={this.onChange}
                                    />
                               </div>
@@ -155,6 +157,8 @@ export default class Add extends React.Component {
                                              type="number"
                                              className="info-input number"
                                              name="itemQuantity"
+                                             value={itemQuantity}
+                                             inputProps={{ min: 0 }}
                                              onChange={this.onChange}
                                         />
                                    </div>
@@ -172,7 +176,7 @@ export default class Add extends React.Component {
                                    </div>
                               </>
                          }
-                         {showMsg && < Msg success={addItemSuccess} />}
+                         {showMsg && < AddItemMsg addSuccess={addItemSuccess} />}
                     </section>
                </div>
           );

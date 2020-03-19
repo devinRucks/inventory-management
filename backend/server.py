@@ -1,5 +1,6 @@
 import os
-from flask import Flask, flash, request, redirect, url_for
+from flask import Flask, flash, request, redirect, url_for, send_from_directory, abort
+from flask.json import jsonify
 from werkzeug.utils import secure_filename
 import json
 import db
@@ -29,8 +30,10 @@ def upload_file():
             return 'OK'
 
         if file and allowed_file(file.filename):
-            base_dir = os.path.abspath(os.path.dirname(__file__))
-            images_dir = os.path.join(base_dir, 'images')
+            # base_dir = os.path.abspath(os.path.dirname(__file__))
+            # images_dir = os.path.join(base_dir, 'images')
+            path = os.getcwd()
+            images_dir = os.path.join(path, 'client/public/images')
             os.makedirs(images_dir, exist_ok=True)
 
             filename = secure_filename(file.filename)
@@ -38,6 +41,16 @@ def upload_file():
             file.save(os.path.join(images_dir, filename))
             return 'OK'
     return 'OK'
+
+
+@app.route('/getImages', methods=['GET', 'POST'])
+def get_images():
+    base_dir = os.path.abspath(os.path.dirname(__file__))
+    images_dir = os.path.join(base_dir, 'images')
+    try:
+        return send_from_directory(images_dir, filename='led.jpg')
+    except FileNotFoundError:
+        abort(404)
 
 
 @app.route('/addItem', methods=['GET', 'POST'])
@@ -48,6 +61,8 @@ def add_item():
     item_row = item_info.get('itemRow')
     item_column = item_info.get('itemColumn')
     image_name = item_info.get('imageName')
+    if (image_name == ''):
+        image_name = "no_image.png"
 
     try:
         db.addItem(item_name, item_quantity, item_row, item_column, image_name)
@@ -58,11 +73,29 @@ def add_item():
     return 'OK'
 
 
-@app.route('/')
-def index():
-    return "Hello World"
+@app.route('/removeItem', methods=['GET', 'POST'])
+def remove_item():
+    item_info = request.get_json()
+    item_name = item_info.get('itemName')
+    item_quantity = item_info.get('itemQuantity')
 
-# TODO: RETURN RESULT FROM DB RATHER THAN BOOL. TEST IF RESULT IS EMPTY ON CLIENT SIDE
+    try:
+        db.removeItem(item_name, item_quantity)
+        return json.dumps(True)
+    except:
+        app.logger.info("Not able to remove item")
+        return json.dumps(False)
+
+
+@app.route('/getAllItems', methods=['GET', 'POST'])
+def get_all_items():
+
+    try:
+        items = db.allItems()
+        return jsonify(items)
+    except:
+        app.logger.info("Not able to retrieve all items")
+        return json.dumps(False)
 
 
 @app.route('/itemSearch', methods=['GET', 'POST'])
