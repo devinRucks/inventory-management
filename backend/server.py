@@ -73,6 +73,24 @@ def add_item():
     return 'OK'
 
 
+@app.route('/updateItem', methods=['GET', 'POST'])
+def update_item():
+    item_info = request.get_json()
+    item_name = item_info.get('itemName')
+    updated_row = item_info.get('updatedRow')
+    updated_column = item_info.get('updatedColumn')
+    updated_image_name = item_info.get('updatedImageName')
+
+    try:
+        db.updateItem(item_name, updated_row,
+                      updated_column, updated_image_name)
+        return json.dumps(True)
+    except:
+        app.logger.info("Not able to update item")
+        return json.dumps(False)
+    return 'OK'
+
+
 @app.route('/removeItem', methods=['GET', 'POST'])
 def remove_item():
     item_info = request.get_json()

@@ -1,10 +1,9 @@
 import React from 'react';
 import { Input, Button } from '@material-ui/core'
 import axios from 'axios'
-import '../../scss/Main.scss'
-import FileUpload from './FileUpload';
+import FileUpload from '../FileUpload';
 import { AddItemMsg } from '../Msg'
-// import ItemPreview from './ItemPreview'
+import '../../scss/Main.scss'
 
 export default class Add extends React.Component {
      constructor(props) {
@@ -14,7 +13,7 @@ export default class Add extends React.Component {
                itemQuantity: 0,
                itemRow: 0,
                itemColumn: 0,
-               image: '',
+               // image: '',
                imageData: '',
                imageName: '',
                showInputs: false,
@@ -87,7 +86,7 @@ export default class Add extends React.Component {
      handleUpload = (e) => {
           this.setState({
                imageData: e.target.files[0],
-               image: URL.createObjectURL(e.target.files[0]),
+               // image: URL.createObjectURL(e.target.files[0]),
                imageName: e.target.files[0].name
           })
      }
@@ -124,7 +123,10 @@ export default class Add extends React.Component {
                                         onChange={this.onChange}
                                    />
                               </div>
-                              <FileUpload handleUpload={this.handleUpload} />
+                              <section id="upload-container">
+                                   <label className="label">Add Item Picture? </label>
+                                   <FileUpload handleUpload={this.handleUpload} />
+                              </section>
                          </>
                     )
                }

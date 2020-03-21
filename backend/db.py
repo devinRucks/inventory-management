@@ -49,6 +49,46 @@ def addItem(itemName, quantity, row, column, img_id):
     conn.close()
 
 
+def updateItem(itemName, updated_row, updated_column, updated_img_id):
+    conn = makeConnection()
+    db = conn.cursor()
+
+    current_item = searchItem(itemName)
+
+    update_row = """
+        UPDATE inventory SET row = '{}' WHERE item = '{}'
+        """.format(updated_row, itemName)
+
+    update_column = """
+        UPDATE inventory SET column = '{}' WHERE item = '{}'
+        """.format(updated_column, itemName)
+
+    update_image_id = """
+        UPDATE inventory SET img_id = '{}' WHERE item = '{}'
+        """.format(updated_img_id, itemName)
+
+    if updated_row != current_item[0][2] and updated_row != 0:
+        try:
+            db.execute(update_row)
+        except:
+            pass
+
+    if updated_column != current_item[0][3] and updated_column != 0:
+        try:
+            db.execute(update_column)
+        except:
+            pass
+
+    if updated_img_id != current_item[0][4] and updated_img_id != '':
+        try:
+            db.execute(update_image_id)
+        except:
+            pass
+
+    conn.commit()
+    conn.close()
+
+
 def searchItem(itemName):
     conn = makeConnection()
     db = conn.cursor()

@@ -2,8 +2,9 @@ import React from 'react';
 import './App.scss';
 import Add from './components/add/Add'
 import Remove from './components/remove/Remove'
-import * as utils from './utils/styling'
+import * as utils from './utils/utils'
 import Inventory from './components/inventory/Inventory';
+import Edit from './components/edit/Edit'
 
 
 class App extends React.Component {
@@ -42,6 +43,7 @@ class App extends React.Component {
                 <section id="content-container">
                     {this.tabActive('Add') && < Add />}
                     {this.tabActive('Remove') && < Remove />}
+                    {this.tabActive('Edit') && < Edit />}
                     {this.tabActive('View Inventory') && < Inventory />}
                 </section>
             </div >

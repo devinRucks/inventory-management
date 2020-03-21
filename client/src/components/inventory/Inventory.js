@@ -1,7 +1,8 @@
 import React from 'react'
 import axios from 'axios'
-import '../../scss/inventory/Inventory.scss'
 import ItemPreview from '../ItemPreview'
+import '../../scss/Inventory.scss'
+import * as utils from '../../utils/utils'
 
 export default class Inventory extends React.Component {
      constructor(props) {
@@ -36,26 +37,20 @@ export default class Inventory extends React.Component {
                .then(result => {
                     if (result) {
                          this.setState({
-                              items: this.convertToArrayOfObjects(result)
+                              items: utils.convertToArrayOfObjects(result)
                          })
                          this.getImageIds()
                     }
                })
      }
 
-     convertToArrayOfObjects = (arrays) => {
-          const result = arrays.map((
-               [name, quantity, row, column, imageId]) => (
-                    { name, quantity, row, column, imageId }));
-          return result
-     }
-
      render() {
           const { items } = this.state
           return (
                <div id="Inventory-component">
-                    {items.map(item =>
+                    {items.map((item, index) =>
                          < ItemPreview
+                              key={index}
                               image={item.imageId}
                               itemName={item.name}
                               itemQuantity={item.quantity}
