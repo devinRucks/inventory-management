@@ -19,5 +19,14 @@ const RemoveItemMsg = ({ removeSuccess }) => {
      )
 }
 
+const UpdatedItemMsg = ({ updateSuccess }) => {
+     return (
+          <div id="msg-container">
+               {updateSuccess && <h4 className="successMsg">Item Successfully Updated! </h4>}
+               {!updateSuccess && <h4 className="errorMsg">Error: Could Not Update Item.. </h4>}
+          </div>
+     )
+}
 
-export { AddItemMsg, RemoveItemMsg }
+
+export { AddItemMsg, RemoveItemMsg, UpdatedItemMsg }

@@ -17,6 +17,11 @@ export default class Remove extends React.Component {
           }
      }
 
+     /** 
+     * Called when 'Search' button is clicked.
+     * Sends --> 'itemName' to flask server to see if it exists in DB
+     * @returns {boolean} result is true if search was successful, false if not
+     */
      handleSubmit = () => {
           const { itemName } = this.state;
           axios.post('/itemSearch', { itemName })
@@ -37,6 +42,10 @@ export default class Remove extends React.Component {
           })
      }
 
+     /** 
+      * Called when 'Remove' button is clicked. 
+      * @returns {boolean} result is true if removing item was successful, false if not
+      */
      removeItem = () => {
           const { itemName, itemQuantity } = this.state;
           axios.post('/removeItem', {

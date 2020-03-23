@@ -13,7 +13,6 @@ export default class Add extends React.Component {
                itemQuantity: 0,
                itemRow: 0,
                itemColumn: 0,
-               // image: '',
                imageData: '',
                imageName: '',
                showInputs: false,
@@ -23,15 +22,11 @@ export default class Add extends React.Component {
           }
      }
 
-     onChange = (e) => {
-          const value = e.target.value;
-          this.setState({
-               ...this.state, [e.target.name]: value
-          })
-     }
-
-     // Sends --> 'itemName' to flask server to see if it exists in DB
-     // Retrieves <-- 'result' as a bool, True if it exists, False if not
+     /**
+      * Called when 'Search' button is clicked.
+      * Sends --> 'itemName' to flask server to see if it exists in DB
+      * @returns {boolean} result is true if search was successful, false if not
+      */
      handleSubmit = () => {
           const { itemName } = this.state;
           axios.post('/itemSearch', { itemName })
@@ -46,8 +41,20 @@ export default class Add extends React.Component {
                .catch(err => console.log(err))
      }
 
-     addItem = (e) => {
-          e.preventDefault()
+     onChange = (e) => {
+          const value = e.target.value;
+          this.setState({
+               ...this.state, [e.target.name]: value
+          })
+     }
+
+     /**
+      * Called when 'Add' button is clicked
+      * Sends new item data to flask server to add item in db
+      * Sends imageData to server to be saved to filesystem (WILL BE CHANGED LATER)
+      * @returns {boolean} result is true if adding item was successful, false if not
+      */
+     addItem = () => {
           const { itemName, itemQuantity, itemRow, itemColumn, imageData, imageName } = this.state;
 
           axios.post('/addItem', {
@@ -70,6 +77,7 @@ export default class Add extends React.Component {
                     console.log(err)
                })
 
+          // When using a developing server (npm start) any filesystem change will launch a page refresh and a file upload change the file system.
           let file = imageData
           console.log(file)
           const formData = new FormData();
@@ -83,20 +91,22 @@ export default class Add extends React.Component {
 
      }
 
+     /** Called from FileUpload component. Triggered by onChange handler on input, type="file" */
      handleUpload = (e) => {
           this.setState({
                imageData: e.target.files[0],
-               // image: URL.createObjectURL(e.target.files[0]),
                imageName: e.target.files[0].name
           })
      }
 
-
      render() {
           const { itemRow, itemColumn, itemQuantity, showInputs, itemExists, addItemSuccess, showMsg } = this.state
 
+          /**
+           * If the item is new, display inputs for the row and column
+           * @returns {JSX} 
+           */
           const renderNewItemInfo = () => {
-               // if the item is not in the inventory, display inputs for setting the row and column location
                if (!itemExists) {
                     return (
                          <>

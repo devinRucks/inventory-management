@@ -30,8 +30,6 @@ def upload_file():
             return 'OK'
 
         if file and allowed_file(file.filename):
-            # base_dir = os.path.abspath(os.path.dirname(__file__))
-            # images_dir = os.path.join(base_dir, 'images')
             path = os.getcwd()
             images_dir = os.path.join(path, 'client/public/images')
             os.makedirs(images_dir, exist_ok=True)

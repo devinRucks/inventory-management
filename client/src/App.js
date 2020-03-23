@@ -6,7 +6,6 @@ import * as utils from './utils/utils'
 import Inventory from './components/inventory/Inventory';
 import Edit from './components/edit/Edit'
 
-
 class App extends React.Component {
     constructor(props) {
         super(props);

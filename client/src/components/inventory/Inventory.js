@@ -14,23 +14,11 @@ export default class Inventory extends React.Component {
           }
      }
 
-     componentDidMount = async () => {
-          this.getAllItems()
-     }
 
-     getImageIds = () => {
-          const { items } = this.state;
-          let image_ids = []
+     componentDidMount = () => { this.getAllItems() }
 
-          image_ids = items.map(item => {
-               const itemValues = Object.values(item)
-               return itemValues[4]
 
-          })
-          this.setState({ imageIds: image_ids })
-          return image_ids
-     }
-
+     /** Called when component mounts. Gets all items from db */
      getAllItems = () => {
           axios.get('/getAllItems')
                .then(res => res.data)
@@ -39,7 +27,6 @@ export default class Inventory extends React.Component {
                          this.setState({
                               items: utils.convertToArrayOfObjects(result)
                          })
-                         this.getImageIds()
                     }
                })
      }

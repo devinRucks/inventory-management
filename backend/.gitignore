@@ -1,3 +1,4 @@
 inventory.db
 images
 __pycache__
+.DS_Store

@@ -2,13 +2,19 @@ import React from 'react'
 import axios from 'axios'
 import ItemSelect from '../ItemSelect'
 import FileUpload from '../FileUpload'
+import { UpdatedItemMsg } from '../Msg'
 import { Input, Button } from '@material-ui/core'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLongArrowAltRight, faChevronCircleRight } from '@fortawesome/free-solid-svg-icons'
 import * as utils from '../../utils/utils'
 import '../../scss/Main.scss'
 import '../../scss/Edit.scss'
 
+/**
+ * Allows updating a row, column, or image of a current item in the inventory.
+ * 1.) Gets value of item needing to be updated, and attempts to find it in inventory
+ * 2.) The markup will be updated showing the item's current row, column, and image
+ * 3.) Regardless if only one value is changed, all of the updated values are sent to server anyways
+ * 4.) The logic is done in DB to determine which values get updated.
+ */
 export default class Edit extends React.Component {
      constructor(props) {
           super(props);
@@ -17,33 +23,52 @@ export default class Edit extends React.Component {
                itemName: '',
                searchClicked: false,
                currentItem: {},
-               updatedRow: 0,
-               updatedColumn: 0,
+               updatedRow: '',
+               updatedColumn: '',
                updatedImageData: '',
-               updatedImageName: ''
+               updatedImageName: '',
+               showMsg: false,
+               updateItemSuccess: false
           }
      }
 
      componentDidMount = () => { this.getAllItems() }
 
-     handleSubmit = () => {
+     /**
+      * Callback function for 'ItemSelect' component. 
+      * @param {string} itemName - Value that was selected from dropdown
+      */
+     selectedItemValue = (itemName) => { this.setState({ itemName }) }
+
+     /**
+      * Called when 'Search' button is clicked.
+      * Finds item that matches the item that was searched,
+      * then sets that item to the currentItem to be manipulated later on.
+      */
+     handleSearch = () => {
           const { itemName, items } = this.state;
           items.forEach(item => {
                if (item.name === itemName) {
-                    this.setState({ currentItem: item, searchClicked: true })
+                    this.setState({
+                         currentItem: item,
+                         searchClicked: true,
+                         showMsg: false,
+                         updatedRow: '',
+                         updatedColumn: '',
+                         updatedImageName: '',
+                    })
                }
           })
      }
 
      onChange = (e) => {
-          const value = e.target.value;
+          const value = parseInt(e.target.value);
           this.setState({
                ...this.state, [e.target.name]: value
           })
      }
 
-     selectedItemValue = (itemName) => { this.setState({ itemName }) }
-
+     /** Called from FileUpload component. Triggered by onChange handler on input, type="file" */
      handleUpload = (e) => {
           this.setState({
                updatedImageData: e.target.files[0],
@@ -51,6 +76,7 @@ export default class Edit extends React.Component {
           })
      }
 
+     /** Called when component mounts. Gets all items from db */
      getAllItems = () => {
           axios.get('/getAllItems')
                .then(res => res.data)
@@ -63,7 +89,12 @@ export default class Edit extends React.Component {
                })
      }
 
-
+     /**
+      * Called when 'Update' button is clicked
+      * Sends updated values to flask server to update item in db
+      * Sends updateImageData to server to be saved to filesystem (WILL BE CHANGED LATER)
+      * @returns {boolean} result is true if update was successful, false if not
+      */
      updateItem = () => {
           const { itemName, updatedRow, updatedColumn, updatedImageName, updatedImageData } = this.state;
 
@@ -75,15 +106,18 @@ export default class Edit extends React.Component {
           })
                .then(res => res.data)
                .then(result => {
-                    console.log(result)
+                    this.setState({
+                         showMsg: true,
+                         updateItemSuccess: result
+                    })
                })
                .catch(err => {
+                    this.setState({ showMsg: true })
                     console.log(err)
                })
 
-
-          let file = updatedImageData
-          console.log(file)
+          // When using a developing server (npm start) any filesystem change will launch a page refresh and a file upload change the file system.
+          const file = updatedImageData
           const formData = new FormData();
           formData.append("file", file)
 
@@ -94,9 +128,8 @@ export default class Edit extends React.Component {
           })
      }
 
-     // PASS IN currentItem, to render current row, pass in currentItem.row
      render() {
-          const { items, currentItem, updatedRow, updatedColumn, searchClicked, updatedImageName } = this.state;
+          const { items, currentItem, updatedRow, updatedColumn, searchClicked, updatedImageName, showMsg, updateItemSuccess } = this.state;
           return (
                <div id="Edit-component">
                     <section id="edit-info-container">
@@ -109,7 +142,7 @@ export default class Edit extends React.Component {
                                    variant="contained"
                                    className="submit-btn"
                                    color="primary"
-                                   onClick={this.handleSubmit}
+                                   onClick={this.handleSearch}
                               >
                                    Search
                               </Button>
@@ -134,7 +167,7 @@ export default class Edit extends React.Component {
                                    <label className="input-label">Row:</label>
                                    <Input
                                         type="number"
-                                        style={currentItem.row == updatedRow || updatedRow == 0 ?
+                                        style={currentItem.row === updatedRow || updatedRow === 0 ?
                                              utils.invalidItemValueStyle :
                                              utils.validItemValueStyle
                                         }
@@ -155,7 +188,7 @@ export default class Edit extends React.Component {
                                    <label className="input-label">Column:</label>
                                    <Input
                                         type="number"
-                                        style={currentItem.column == updatedColumn || updatedColumn == 0 ?
+                                        style={currentItem.column === updatedColumn || updatedColumn === 0 ?
                                              utils.invalidItemValueStyle :
                                              utils.validItemValueStyle
                                         }
@@ -199,7 +232,7 @@ export default class Edit extends React.Component {
                                    Update
                               </Button>
                          </div>
-
+                         {showMsg && < UpdatedItemMsg updateSuccess={updateItemSuccess} />}
                     </section>
                </div>
           )
