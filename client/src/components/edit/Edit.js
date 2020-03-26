@@ -3,10 +3,13 @@ import axios from 'axios'
 import ItemSelect from '../ItemSelect'
 import FileUpload from '../FileUpload'
 import { UpdatedItemMsg } from '../Msg'
+import { storageRef } from '../../firebase.config'
 import { Input, Button } from '@material-ui/core'
 import * as utils from '../../utils/utils'
 import '../../scss/Main.scss'
 import '../../scss/Edit.scss'
+
+// TODO: CREATE RESUABLE FUNCTION THAT GOES TO FIREBASE STORAGE AND RETURNS IMAGE URL
 
 /**
  * Allows updating a row, column, or image of a current item in the inventory.
@@ -23,9 +26,10 @@ export default class Edit extends React.Component {
                itemName: '',
                searchClicked: false,
                currentItem: {},
+               currentImageURL: '',
+               updatedImageURL: '',
                updatedRow: '',
                updatedColumn: '',
-               updatedImageData: '',
                updatedImageName: '',
                showMsg: false,
                updateItemSuccess: false
@@ -56,6 +60,9 @@ export default class Edit extends React.Component {
                          updatedRow: '',
                          updatedColumn: '',
                          updatedImageName: '',
+                    }, async () => {
+                         const url = await utils.getFirebaseImageURL(this.state.currentItem.imageId)
+                         this.setState({ currentImageURL: url })
                     })
                }
           })
@@ -68,12 +75,31 @@ export default class Edit extends React.Component {
           })
      }
 
-     /** Called from FileUpload component. Triggered by onChange handler on input, type="file" */
-     handleUpload = (e) => {
-          this.setState({
-               updatedImageData: e.target.files[0],
-               updatedImageName: e.target.files[0].name
-          })
+     /** 
+     * Called from FileUpload component. Triggered by onChange handler on input, type="file" 
+     * Sends file to firebase storage and 
+     */
+     handleImageUpload = (e) => {
+          const file = e.target.files[0]
+          const fileName = file.name
+          const uploadTask = storageRef.child(fileName).put(file)
+
+          const next = (snapshot) => {
+               const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+               console.log(`${percent}% done uploading..`)
+          }
+          const error = (error) => {
+               console.log(error)
+          }
+          const complete = () => {
+               console.log("Upload complete!")
+               this.setState({ updatedImageName: fileName }, () => console.log(this.state.updatedImageName))
+          }
+
+          uploadTask.on('state_changed',
+               next,
+               error,
+               complete);
      }
 
      /** Called when component mounts. Gets all items from db */
@@ -96,7 +122,7 @@ export default class Edit extends React.Component {
       * @returns {boolean} result is true if update was successful, false if not
       */
      updateItem = () => {
-          const { itemName, updatedRow, updatedColumn, updatedImageName, updatedImageData } = this.state;
+          const { itemName, updatedRow, updatedColumn, updatedImageName } = this.state;
 
           axios.post('/updateItem', {
                itemName,
@@ -115,21 +141,10 @@ export default class Edit extends React.Component {
                     this.setState({ showMsg: true })
                     console.log(err)
                })
-
-          // When using a developing server (npm start) any filesystem change will launch a page refresh and a file upload change the file system.
-          const file = updatedImageData
-          const formData = new FormData();
-          formData.append("file", file)
-
-          axios.post('/uploadImage', formData, {
-               headers: {
-                    'Content-Type': 'multipart/form-data'
-               }
-          })
      }
 
      render() {
-          const { items, currentItem, updatedRow, updatedColumn, searchClicked, updatedImageName, showMsg, updateItemSuccess } = this.state;
+          const { items, currentItem, currentImageURL, updatedRow, updatedColumn, searchClicked, updatedImageName, showMsg, updateItemSuccess } = this.state;
           return (
                <div id="Edit-component">
                     <section id="edit-info-container">
@@ -204,7 +219,7 @@ export default class Edit extends React.Component {
                                    <label className="input-label">Image:</label>
                                    <div className="image-placeholder">
                                         {searchClicked &&
-                                             <img className="image" alt="item" src={`./images/${currentItem.imageId}`} />
+                                             <img className="image" alt="item" src={`${currentImageURL}`} />
                                         }
                                    </div>
                               </section>
@@ -217,7 +232,7 @@ export default class Edit extends React.Component {
                                         }
                                    </div>
                                    <section id="file-upload-container">
-                                        < FileUpload handleUpload={this.handleUpload} />
+                                        < FileUpload handleUpload={this.handleImageUpload} />
                                    </section>
                               </section>
                          </div>

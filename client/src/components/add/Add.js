@@ -2,6 +2,7 @@ import React from 'react';
 import { Input, Button } from '@material-ui/core'
 import axios from 'axios'
 import FileUpload from '../FileUpload';
+import { storageRef } from '../../firebase.config'
 import { AddItemMsg } from '../Msg'
 import '../../scss/Main.scss'
 
@@ -14,7 +15,7 @@ export default class Add extends React.Component {
                itemRow: 0,
                itemColumn: 0,
                imageData: '',
-               imageName: '',
+               fileName: '',
                showInputs: false,
                itemExists: false,
                showMsg: false,
@@ -48,6 +49,35 @@ export default class Add extends React.Component {
           })
      }
 
+
+     /** 
+     * Called from FileUpload component. Triggered by onChange handler on input, type="file" 
+     * Sends file to firebase storage and 
+     */
+     handleImageUpload = (e) => {
+          const file = e.target.files[0]
+          const fileName = file.name
+          const uploadTask = storageRef.child(fileName).put(file)
+
+          const next = (snapshot) => {
+               const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+               console.log(`${percent}% done uploading..`)
+          }
+          const error = (error) => {
+               console.log(error)
+          }
+          const complete = () => {
+               console.log("Upload complete!")
+               this.setState({ fileName }, () => console.log(this.state.fileName))
+          }
+
+          uploadTask.on('state_changed',
+               next,
+               error,
+               complete);
+     }
+
+
      /**
       * Called when 'Add' button is clicked
       * Sends new item data to flask server to add item in db
@@ -55,14 +85,14 @@ export default class Add extends React.Component {
       * @returns {boolean} result is true if adding item was successful, false if not
       */
      addItem = () => {
-          const { itemName, itemQuantity, itemRow, itemColumn, imageData, imageName } = this.state;
+          const { itemName, itemQuantity, itemRow, itemColumn, fileName } = this.state;
 
           axios.post('/addItem', {
                itemName,
                itemQuantity,
                itemRow,
                itemColumn,
-               imageName
+               fileName
           })
                .then(res => res.data)
                .then(result => {
@@ -76,32 +106,11 @@ export default class Add extends React.Component {
                     this.setState({ showMsg: true })
                     console.log(err)
                })
-
-          // When using a developing server (npm start) any filesystem change will launch a page refresh and a file upload change the file system.
-          let file = imageData
-          console.log(file)
-          const formData = new FormData();
-          formData.append("file", file)
-
-          axios.post('/uploadImage', formData, {
-               headers: {
-                    'Content-Type': 'multipart/form-data'
-               }
-          })
-
      }
 
-     /** Called from FileUpload component. Triggered by onChange handler on input, type="file" */
-     handleUpload = (e) => {
-          this.setState({
-               imageData: e.target.files[0],
-               imageName: e.target.files[0].name
-          })
-     }
 
      render() {
           const { itemRow, itemColumn, itemQuantity, showInputs, itemExists, addItemSuccess, showMsg } = this.state
-
           /**
            * If the item is new, display inputs for the row and column
            * @returns {JSX} 
@@ -135,7 +144,7 @@ export default class Add extends React.Component {
                               </div>
                               <section id="upload-container">
                                    <label className="label">Add Item Picture? </label>
-                                   <FileUpload handleUpload={this.handleUpload} />
+                                   <FileUpload handleUpload={this.handleImageUpload} />
                               </section>
                          </>
                     )

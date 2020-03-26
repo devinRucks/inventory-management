@@ -58,12 +58,12 @@ def add_item():
     item_quantity = item_info.get('itemQuantity')
     item_row = item_info.get('itemRow')
     item_column = item_info.get('itemColumn')
-    image_name = item_info.get('imageName')
-    if (image_name == ''):
-        image_name = "no_image.png"
+    file_name = item_info.get('fileName')
+    if (file_name == ''):
+        file_name = "no_image.png"
 
     try:
-        db.addItem(item_name, item_quantity, item_row, item_column, image_name)
+        db.addItem(item_name, item_quantity, item_row, item_column, file_name)
         return json.dumps(True)
     except:
         app.logger.info("Not able to add item...")
