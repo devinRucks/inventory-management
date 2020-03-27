@@ -32,18 +32,14 @@ def addItem(itemName, quantity, row, column, img_id):
     conn = makeConnection()
     db = conn.cursor()
 
-    insertNewItem = """
-               INSERT INTO inventory (item, quantity, row, column, img_id)
-               VALUES ('{}', '{}', '{}', '{}', '{}')
-               """.format(itemName, quantity, row, column, img_id)
-
-    increaseQuantityIfExists = """
-               UPDATE inventory SET quantity = quantity + '{}' WHERE item = '{}'
-               """.format(quantity, itemName)
+    # If new item, add all values
     try:
-        db.execute(insertNewItem)
+        db.execute('INSERT INTO inventory(item, quantity, row, column, img_id) VALUES (?,?,?,?,?)',
+                   (itemName, quantity, row, column, img_id))
+    # If item already exists, update the item's quantity
     except:
-        db.execute(increaseQuantityIfExists)
+        db.execute(
+            'UPDATE inventory SET quantity = quantity + ? WHERE item = ?', (quantity, itemName))
 
     conn.commit()
     conn.close()
@@ -54,34 +50,31 @@ def updateItem(itemName, updated_row, updated_column, updated_img_id):
     db = conn.cursor()
 
     current_item = searchItem(itemName)
+    current_row = current_item[0][2]
+    current_column = current_item[0][3]
+    current_image_id = current_item[0][4]
 
-    update_row = """
-        UPDATE inventory SET row = '{}' WHERE item = '{}'
-        """.format(updated_row, itemName)
-
-    update_column = """
-        UPDATE inventory SET column = '{}' WHERE item = '{}'
-        """.format(updated_column, itemName)
-
-    update_image_id = """
-        UPDATE inventory SET img_id = '{}' WHERE item = '{}'
-        """.format(updated_img_id, itemName)
-
-    if updated_row != current_item[0][2] and updated_row != 0 and updated_row != '':
+    # UPDATING ROW
+    if updated_row not in (current_row, 0, ''):
         try:
-            db.execute(update_row)
+            db.execute('UPDATE inventory SET row = ? WHERE item = ?',
+                       (updated_row, itemName))
         except:
             pass
 
-    if updated_column != current_item[0][3] and updated_column != 0 and updated_column != '':
+    # UPDATING COLUMN
+    if updated_column not in (current_column, 0, ''):
         try:
-            db.execute(update_column)
+            db.execute('UPDATE inventory SET column = ? WHERE item = ?',
+                       (updated_column, itemName))
         except:
             pass
 
-    if updated_img_id != current_item[0][4] and updated_img_id != '':
+    # UPDATING IMAGE_ID
+    if updated_img_id not in (current_image_id, ''):
         try:
-            db.execute(update_image_id)
+            db.execute('UPDATE inventory SET img_id = ? WHERE item = ?',
+                       (updated_img_id, itemName))
         except:
             pass
 
@@ -95,7 +88,7 @@ def searchItem(itemName):
 
     try:
         db.execute(
-            "SELECT * FROM inventory WHERE item='{}'".format(itemName))
+            """SELECT * FROM inventory WHERE item = '{}'""".format(itemName))
         return db.fetchall()
     except:
         print("Error: No item found in inventory..")
@@ -108,14 +101,11 @@ def removeItem(itemName, quantity):
     conn = makeConnection()
     db = conn.cursor()
 
-    lowerQuantityOfItem = """
-               UPDATE inventory SET quantity = quantity - '{}' WHERE item = '{}' AND quantity >= '{}'
-               """.format(quantity, itemName, quantity)
-
     try:
-        db.execute(lowerQuantityOfItem)
+        db.execute('UPDATE inventory SET quantity = quantity - ? WHERE item = ? AND quantity >= ?',
+                   (quantity, itemName, quantity))
     except:
-        print("Error: The current quantity of {} is less than the amount you want to remove..".format(itemName))
+        print("Error: The current quantity of ? is less than the amount you want to remove..", (itemName))
 
     conn.commit()
     conn.close()
