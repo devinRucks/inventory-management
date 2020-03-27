@@ -10,8 +10,8 @@ const validItemValueStyle = { color: '#00a93e' }
 
 const invalidItemValueStyle = { color: '#fa0000' }
 
-const getFirebaseImageURL = async (imageId) => {
-     const imageURL = await storageRef.child(imageId).getDownloadURL()
+const getFirebaseImageURL = (imageId) => {
+     const imageURL = storageRef.child(imageId).getDownloadURL()
           .then(url => {
                return url
           })

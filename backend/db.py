@@ -67,13 +67,13 @@ def updateItem(itemName, updated_row, updated_column, updated_img_id):
         UPDATE inventory SET img_id = '{}' WHERE item = '{}'
         """.format(updated_img_id, itemName)
 
-    if updated_row != current_item[0][2] and updated_row != 0:
+    if updated_row != current_item[0][2] and updated_row != 0 and updated_row != '':
         try:
             db.execute(update_row)
         except:
             pass
 
-    if updated_column != current_item[0][3] and updated_column != 0:
+    if updated_column != current_item[0][3] and updated_column != 0 and updated_column != '':
         try:
             db.execute(update_column)
         except:

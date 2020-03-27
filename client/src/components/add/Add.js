@@ -2,7 +2,6 @@ import React from 'react';
 import { Input, Button } from '@material-ui/core'
 import axios from 'axios'
 import FileUpload from '../FileUpload';
-import { storageRef } from '../../firebase.config'
 import { AddItemMsg } from '../Msg'
 import '../../scss/Main.scss'
 
@@ -50,31 +49,11 @@ export default class Add extends React.Component {
      }
 
 
-     /** 
-     * Called from FileUpload component. Triggered by onChange handler on input, type="file" 
-     * Sends file to firebase storage and 
+     /* Called from FileUpload component. Retrieves name of file selected and updates state.
+     * Need this for when you send the item info (name, quantity, row, column, filename) to server
      */
-     handleImageUpload = (e) => {
-          const file = e.target.files[0]
-          const fileName = file.name
-          const uploadTask = storageRef.child(fileName).put(file)
-
-          const next = (snapshot) => {
-               const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-               console.log(`${percent}% done uploading..`)
-          }
-          const error = (error) => {
-               console.log(error)
-          }
-          const complete = () => {
-               console.log("Upload complete!")
-               this.setState({ fileName }, () => console.log(this.state.fileName))
-          }
-
-          uploadTask.on('state_changed',
-               next,
-               error,
-               complete);
+     handleImageUpload = (fileName) => {
+          this.setState({ fileName })
      }
 
 

@@ -1,19 +1,45 @@
 $off-white: #F5F5F5;
 $teal: #056571;
 
+#file-upload-container {
+     margin-left: 5px;
+     display: flex;
+     align-items: center;
+     justify-content: flex-start;
 
-input {
-     display: none;
+     .image-placeholder {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+          height: 50px;
+          width: 50px;
+          overflow: hidden;
+          border: 1px #333 solid;
+          margin-left: 5px;
+          border-radius: 20%;
+
+          .image {
+               object-fit: cover;
+               width: 100%;
+               height: 100%;
+          }
+     }
+     
+     input {
+          display: none;
+     }
+     
+     .filename {
+          border: 1px #333 solid;
+          white-space: nowrap;
+          overflow: hidden;
+          font-size: 14px;
+          margin-left: 30px;
+          height: 22px;
+          width: 100px;
+     }
+     
+     .upload-btn { margin-left: 20px; }
 }
 
-.filename {
-     border: 1px #333 solid;
-     white-space: nowrap;
-     overflow: hidden;
-     font-size: 14px;
-     margin-left: 30px;
-     height: 22px;
-     width: 100px;
-}
-
-.upload-btn { margin-left: 20px; }

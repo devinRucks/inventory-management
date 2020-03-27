@@ -3,7 +3,6 @@ import axios from 'axios'
 import ItemSelect from '../ItemSelect'
 import FileUpload from '../FileUpload'
 import { UpdatedItemMsg } from '../Msg'
-import { storageRef } from '../../firebase.config'
 import { Input, Button } from '@material-ui/core'
 import * as utils from '../../utils/utils'
 import '../../scss/Main.scss'
@@ -44,6 +43,7 @@ export default class Edit extends React.Component {
       */
      selectedItemValue = (itemName) => { this.setState({ itemName }) }
 
+
      /**
       * Called when 'Search' button is clicked.
       * Finds item that matches the item that was searched,
@@ -75,31 +75,11 @@ export default class Edit extends React.Component {
           })
      }
 
-     /** 
-     * Called from FileUpload component. Triggered by onChange handler on input, type="file" 
-     * Sends file to firebase storage and 
+     /* Called from FileUpload component. Retrieves name of file selected and updates state.
+     * Need this for when you send the item info (name, quantity, row, column, filename) to server
      */
-     handleImageUpload = (e) => {
-          const file = e.target.files[0]
-          const fileName = file.name
-          const uploadTask = storageRef.child(fileName).put(file)
-
-          const next = (snapshot) => {
-               const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-               console.log(`${percent}% done uploading..`)
-          }
-          const error = (error) => {
-               console.log(error)
-          }
-          const complete = () => {
-               console.log("Upload complete!")
-               this.setState({ updatedImageName: fileName }, () => console.log(this.state.updatedImageName))
-          }
-
-          uploadTask.on('state_changed',
-               next,
-               error,
-               complete);
+     updatedImageUpload = (updatedImageName) => {
+          this.setState({ updatedImageName })
      }
 
      /** Called when component mounts. Gets all items from db */
@@ -144,7 +124,7 @@ export default class Edit extends React.Component {
      }
 
      render() {
-          const { items, currentItem, currentImageURL, updatedRow, updatedColumn, searchClicked, updatedImageName, showMsg, updateItemSuccess } = this.state;
+          const { items, currentItem, currentImageURL, updatedRow, updatedColumn, searchClicked, showMsg, updateItemSuccess } = this.state;
           return (
                <div id="Edit-component">
                     <section id="edit-info-container">
@@ -226,14 +206,7 @@ export default class Edit extends React.Component {
 
                               <section id="updated-image-container">
                                    <label className="input-label">Image:</label>
-                                   <div className="image-placeholder">
-                                        {(updatedImageName !== '') &&
-                                             <img className="image" alt="item" src={`./images/${updatedImageName}`} />
-                                        }
-                                   </div>
-                                   <section id="file-upload-container">
-                                        < FileUpload handleUpload={this.handleImageUpload} />
-                                   </section>
+                                   < FileUpload handleUpload={this.updatedImageUpload} />
                               </section>
                          </div>
 
