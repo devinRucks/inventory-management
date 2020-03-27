@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@material-ui/core'
-import { storageRef } from '../firebase.config'
+import { storageRef } from '../firebaseConfig'
 import * as utils from '../utils/utils'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import CircleLoader from "react-spinners/CircleLoader"

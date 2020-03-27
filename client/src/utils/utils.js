@@ -1,4 +1,4 @@
-import { storageRef } from '../firebase.config'
+import { storageRef } from '../firebaseConfig'
 
 
 const tabSelectedStyling = {
