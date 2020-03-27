@@ -48,7 +48,6 @@ export default class Add extends React.Component {
           })
      }
 
-
      /* Called from FileUpload component. Retrieves name of file selected and updates state.
      * Need this for when you send the item info (name, quantity, row, column, filename) to server
      */
@@ -56,11 +55,9 @@ export default class Add extends React.Component {
           this.setState({ fileName })
      }
 
-
      /**
       * Called when 'Add' button is clicked
       * Sends new item data to flask server to add item in db
-      * Sends imageData to server to be saved to filesystem (WILL BE CHANGED LATER)
       * @returns {boolean} result is true if adding item was successful, false if not
       */
      addItem = () => {

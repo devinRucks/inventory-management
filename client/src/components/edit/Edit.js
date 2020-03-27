@@ -98,7 +98,6 @@ export default class Edit extends React.Component {
      /**
       * Called when 'Update' button is clicked
       * Sends updated values to flask server to update item in db
-      * Sends updateImageData to server to be saved to filesystem (WILL BE CHANGED LATER)
       * @returns {boolean} result is true if update was successful, false if not
       */
      updateItem = () => {
