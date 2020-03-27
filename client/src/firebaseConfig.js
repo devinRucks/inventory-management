@@ -2,14 +2,14 @@ import * as firebase from 'firebase/app';
 import 'firebase/storage'
 
 const firebaseConfig = {
-     apiKey: "AIzaSyBobGQ6icN8riB3DbonWOdCPtc7SVQ5HyE",
-     authDomain: "inventory-management-e2767.firebaseapp.com",
-     databaseURL: "https://inventory-management-e2767.firebaseio.com",
-     projectId: "inventory-management-e2767",
-     storageBucket: "inventory-management-e2767.appspot.com",
-     messagingSenderId: "452981708434",
-     appId: "1:452981708434:web:9c0cfaf9fbfd491e0db84b",
-     measurementId: "G-S7716HSF9F"
+     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+     authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+     databaseURL: process.env.REACT_APP_DB_URL,
+     projectId: process.env.REACT_APP_PPROJECT_ID,
+     storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+     messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+     appId: process.env.REACT_APP_APP_ID,
+     measurementId: process.env.REACT_APP_MEASUREMENT_ID
 }
 
 firebase.initializeApp(firebaseConfig)
