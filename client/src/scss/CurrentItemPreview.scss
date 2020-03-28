@@ -1,0 +1,108 @@
+#current-item-preview-container {
+     border: 2px #333 solid;
+     display: grid;
+     grid-template-areas: "image name quantity row column";
+     grid-template-columns: .5fr .5fr 1fr 1fr 1fr;
+     margin-bottom: 8px;
+     transition: all .15s ease-out;
+     padding: 5px;
+     width: 600px;
+     height: 90px;
+
+     .horizontal-row {
+          background-color: black;
+          margin: 5px 0px;
+          border: none;
+          width: 70px;
+          height: 1px;
+     }
+
+     #item-image-container {
+          grid-area: image;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .image-placeholder {
+               display: flex;
+               justify-content: center;
+               align-items: center;
+               position: relative;
+               height: 70px;
+               width: 70px;
+               overflow: hidden;
+               border: 1px #333 solid;
+               border-radius: 10px;
+
+               .image {
+                    object-fit: cover;
+                    width: 100%;
+                    height: 100%;
+               }
+          }
+
+     }
+
+     #item-name-container {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          width: 150px;
+          // border: 1px green solid;
+
+          .itemName {
+               padding-left: 15px;
+               font-size: 22px;
+          }
+     }
+
+     #item-quantity-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: center;
+          // border: 1px red solid;
+
+          .quantity-title {
+               font-size: 17px;
+          }
+          .quantity-value {
+               // padding-top: 12px;
+               font-size: 18px;
+          }
+     }
+
+     #item-row-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: center;
+          // border: 1px red solid;
+
+          .row-title {
+               font-size: 17px;
+          }
+
+          .row-value {
+               // padding-top: 12px;
+               font-size: 18px;
+          }
+     }
+
+     #item-column-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: center;
+          // border: 1px red solid;
+
+          .column-title {
+               font-size: 17px;
+          }
+
+          .column-value {
+               // padding-top: 12px;
+               font-size: 18px;
+          }
+     }
+}

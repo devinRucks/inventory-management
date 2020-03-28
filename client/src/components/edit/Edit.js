@@ -3,6 +3,7 @@ import axios from 'axios'
 import ItemSelect from '../ItemSelect'
 import FileUpload from '../FileUpload'
 import { UpdatedItemMsg } from '../Msg'
+import CurrentItemPreview from '../CurrentItemPreview'
 import { Input, Button } from '@material-ui/core'
 import * as utils from '../../utils/utils'
 import '../../scss/Main.scss'
@@ -31,11 +32,22 @@ export default class Edit extends React.Component {
                updatedColumn: '',
                updatedImageName: '',
                showMsg: false,
-               updateItemSuccess: false
+               updateItemSuccess: false,
+               loading: false
           }
      }
 
-     componentDidMount = () => { this.getAllItems() }
+     componentDidMount = () => {
+          axios.get('/getAllItems')
+               .then(res => res.data)
+               .then(result => {
+                    if (result) {
+                         this.setState({
+                              items: utils.convertToArrayOfObjects(result)
+                         })
+                    }
+               })
+     }
 
      /**
       * Callback function for 'ItemSelect' component. 
@@ -61,8 +73,9 @@ export default class Edit extends React.Component {
                          updatedColumn: '',
                          updatedImageName: '',
                     }, async () => {
+                         this.setState({ loading: true })
                          const url = await utils.getFirebaseImageURL(this.state.currentItem.imageId)
-                         this.setState({ currentImageURL: url })
+                         this.setState({ currentImageURL: url, loading: false })
                     })
                }
           })
@@ -82,18 +95,6 @@ export default class Edit extends React.Component {
           this.setState({ updatedImageName })
      }
 
-     /** Called when component mounts. Gets all items from db */
-     getAllItems = () => {
-          axios.get('/getAllItems')
-               .then(res => res.data)
-               .then(result => {
-                    if (result) {
-                         this.setState({
-                              items: utils.convertToArrayOfObjects(result)
-                         })
-                    }
-               })
-     }
 
      /**
       * Called when 'Update' button is clicked
@@ -123,7 +124,7 @@ export default class Edit extends React.Component {
      }
 
      render() {
-          const { items, currentItem, currentImageURL, updatedRow, updatedColumn, searchClicked, showMsg, updateItemSuccess } = this.state;
+          const { items, currentItem, currentImageURL, updatedRow, updatedColumn, searchClicked, showMsg, updateItemSuccess, loading } = this.state;
           return (
                <div id="Edit-component">
                     <section id="edit-info-container">
@@ -142,83 +143,68 @@ export default class Edit extends React.Component {
                               </Button>
                          </div>
                          <div id="current-updated-container">
-                              <section id="current-title-container">
-                                   <h2>Current</h2>
-                                   <hr className="horizontal-row" />
-                              </section>
+                              <CurrentItemPreview
+                                   item={currentItem}
+                                   imageURL={currentImageURL}
+                                   loading={loading}
+                              />
 
-                              <section id="updated-title-container">
-                                   <h2>Updated</h2>
-                                   <hr className="horizontal-row" />
-                              </section>
+                              <section id="updated-item-container">
+                                   <section id="updated-title-container">
+                                        <h2>Update</h2>
+                                        <hr className="horizontal-row" />
+                                   </section>
 
-                              <section id="current-row-container">
-                                   <label className="input-label">Row:</label>
-                                   <div className="input-value">{currentItem.row}</div>
-                              </section>
+                                   <section id="updated-row-column-container">
+                                        <section id="updated-row-container">
+                                             <label className="input-label">Row:</label>
+                                             <Input
+                                                  type="number"
+                                                  style={currentItem.row === updatedRow || updatedRow === 0 ?
+                                                       utils.invalidItemValueStyle :
+                                                       utils.validItemValueStyle
+                                                  }
+                                                  className="updated-info-number"
+                                                  name='updatedRow'
+                                                  value={updatedRow}
+                                                  inputProps={{ min: 0 }}
+                                                  onChange={this.onChange}
+                                             />
+                                        </section>
 
-                              <section id="updated-row-container">
-                                   <label className="input-label">Row:</label>
-                                   <Input
-                                        type="number"
-                                        style={currentItem.row === updatedRow || updatedRow === 0 ?
-                                             utils.invalidItemValueStyle :
-                                             utils.validItemValueStyle
-                                        }
-                                        className="updated-info-number"
-                                        name='updatedRow'
-                                        value={updatedRow}
-                                        inputProps={{ min: 0 }}
-                                        onChange={this.onChange}
-                                   />
-                              </section>
+                                        <section id="updated-column-container">
+                                             <label className="input-label">Column:</label>
+                                             <Input
+                                                  type="number"
+                                                  style={currentItem.column === updatedColumn || updatedColumn === 0 ?
+                                                       utils.invalidItemValueStyle :
+                                                       utils.validItemValueStyle
+                                                  }
+                                                  className="updated-info-number"
+                                                  name='updatedColumn'
+                                                  value={updatedColumn}
+                                                  inputProps={{ min: 0 }}
+                                                  onChange={this.onChange}
+                                             />
+                                        </section>
+                                   </section>
 
-                              <section id="current-column-container">
-                                   <label className="input-label">Column:</label>
-                                   <div className="input-value">{currentItem.column}</div>
-                              </section>
-
-                              <section id="updated-column-container">
-                                   <label className="input-label">Column:</label>
-                                   <Input
-                                        type="number"
-                                        style={currentItem.column === updatedColumn || updatedColumn === 0 ?
-                                             utils.invalidItemValueStyle :
-                                             utils.validItemValueStyle
-                                        }
-                                        className="updated-info-number"
-                                        name='updatedColumn'
-                                        value={updatedColumn}
-                                        inputProps={{ min: 0 }}
-                                        onChange={this.onChange}
-                                   />
-                              </section>
-
-                              <section id="current-image-container">
-                                   <label className="input-label">Image:</label>
-                                   <div className="image-placeholder">
-                                        {searchClicked &&
-                                             <img className="image" alt="item" src={`${currentImageURL}`} />
-                                        }
-                                   </div>
-                              </section>
-
-                              <section id="updated-image-container">
-                                   <label className="input-label">Image:</label>
-                                   < FileUpload handleUpload={this.updatedImageUpload} />
+                                   <section id="updated-image-container">
+                                        <label className="input-label">Image:</label>
+                                        < FileUpload handleUpload={this.updatedImageUpload} />
+                                   </section>
                               </section>
                          </div>
 
-                         <div id="input-container">
-                              <Button
-                                   variant="contained"
-                                   className="submit-btn add-btn"
-                                   color="primary"
-                                   onClick={this.updateItem}
-                              >
-                                   Update
-                              </Button>
-                         </div>
+                         <Button
+                              variant="contained"
+                              className="update-btn"
+                              color="primary"
+                              onClick={this.updateItem}
+                         >
+                              Update
+                         </Button>
+
                          {showMsg && < UpdatedItemMsg updateSuccess={updateItemSuccess} />}
                     </section>
                </div>

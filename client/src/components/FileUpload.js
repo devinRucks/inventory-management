@@ -3,7 +3,7 @@ import { Button } from '@material-ui/core'
 import { storageRef } from '../firebaseConfig'
 import * as utils from '../utils/utils'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import CircleLoader from "react-spinners/CircleLoader"
+import ClipLoader from "react-spinners/ClipLoader"
 import '../scss/FileUpload.scss'
 
 export default class FileUpload extends React.Component {
@@ -55,7 +55,7 @@ export default class FileUpload extends React.Component {
                          {(imageURL !== '') &&
                               <img className="image" alt="item" src={`${imageURL}`} />
                          }
-                         <CircleLoader
+                         <ClipLoader
                               size={30}
                               color={"#056571"}
                               loading={loading}
