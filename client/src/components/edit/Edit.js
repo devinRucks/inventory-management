@@ -26,11 +26,13 @@ export default class Edit extends React.Component {
                itemName: '',
                searchClicked: false,
                currentItem: {},
+               updatedItem: {
+                    row: 0,
+                    column: 0,
+                    imageName: ''
+               },
                currentImageURL: '',
                updatedImageURL: '',
-               updatedRow: '',
-               updatedColumn: '',
-               updatedImageName: '',
                showMsg: false,
                updateItemSuccess: false,
                loading: false
@@ -43,7 +45,7 @@ export default class Edit extends React.Component {
                .then(result => {
                     if (result) {
                          this.setState({
-                              items: utils.convertToArrayOfObjects(result)
+                              items: utils.convertToArrayOfObjects(result) // DONT NEED ALL ITEMS, MAYBE ONLY RETURN THE ITEM THAT MATCHES ITEMNAME
                          })
                     }
                })
@@ -69,11 +71,14 @@ export default class Edit extends React.Component {
                          currentItem: item,
                          searchClicked: true,
                          showMsg: false,
-                         updatedRow: '',
-                         updatedColumn: '',
-                         updatedImageName: '',
+                         updatedItem: {
+                              row: 0,
+                              column: 0,
+                              imageName: ''
+                         },
                     }, async () => {
                          this.setState({ loading: true })
+                         // ADD ERROR HANDLING IF imageId IS EMPTY
                          const url = await utils.getFirebaseImageURL(this.state.currentItem.imageId)
                          this.setState({ currentImageURL: url, loading: false })
                     })
@@ -82,17 +87,24 @@ export default class Edit extends React.Component {
      }
 
      onChange = (e) => {
-          const value = parseInt(e.target.value);
-          this.setState({
-               ...this.state, [e.target.name]: value
-          })
+          // ADD ERROR HANDLING IF VALUE IS NaN
+          const value = parseInt(e.target.value) || 0;
+          const name = e.target.name
+          const updatedItem = Object.assign({}, this.state.updatedItem)
+          updatedItem[name] = value
+          this.setState({ updatedItem })
      }
 
      /* Called from FileUpload component. Retrieves name of file selected and updates state.
      * Need this for when you send the item info (name, quantity, row, column, filename) to server
      */
      updatedImageUpload = (updatedImageName) => {
-          this.setState({ updatedImageName })
+          console.log(updatedImageName)
+          this.setState(prevState => {
+               let updatedItem = Object.assign({}, prevState.updatedItem) // creating copy of state variable updatedItem
+               updatedItem.imageName = updatedImageName; // update the imageName property, assign a new value 
+               return { updatedItem };
+          })
      }
 
 
@@ -102,14 +114,9 @@ export default class Edit extends React.Component {
       * @returns {boolean} result is true if update was successful, false if not
       */
      updateItem = () => {
-          const { itemName, updatedRow, updatedColumn, updatedImageName } = this.state;
+          const { itemName, updatedItem } = this.state;
 
-          axios.post('/updateItem', {
-               itemName,
-               updatedRow,
-               updatedColumn,
-               updatedImageName
-          })
+          axios.post('/updateItem', { itemName, updatedItem })
                .then(res => res.data)
                .then(result => {
                     this.setState({
@@ -124,7 +131,7 @@ export default class Edit extends React.Component {
      }
 
      render() {
-          const { items, currentItem, currentImageURL, updatedRow, updatedColumn, searchClicked, showMsg, updateItemSuccess, loading } = this.state;
+          const { items, currentItem, updatedItem, currentImageURL, searchClicked, showMsg, updateItemSuccess, loading } = this.state;
           return (
                <div id="Edit-component">
                     <section id="edit-info-container">
@@ -160,13 +167,14 @@ export default class Edit extends React.Component {
                                              <label className="input-label">Row:</label>
                                              <Input
                                                   type="number"
-                                                  style={currentItem.row === updatedRow || updatedRow === 0 ?
+                                                  style={currentItem.row === updatedItem.row ||
+                                                       updatedItem.row === 0 ?
                                                        utils.invalidItemValueStyle :
                                                        utils.validItemValueStyle
                                                   }
                                                   className="updated-info-number"
-                                                  name='updatedRow'
-                                                  value={updatedRow}
+                                                  name='row'
+                                                  value={updatedItem.row}
                                                   inputProps={{ min: 0 }}
                                                   onChange={this.onChange}
                                              />
@@ -176,13 +184,14 @@ export default class Edit extends React.Component {
                                              <label className="input-label">Column:</label>
                                              <Input
                                                   type="number"
-                                                  style={currentItem.column === updatedColumn || updatedColumn === 0 ?
+                                                  style={currentItem.column === updatedItem.column ||
+                                                       updatedItem.column === 0 ?
                                                        utils.invalidItemValueStyle :
                                                        utils.validItemValueStyle
                                                   }
                                                   className="updated-info-number"
-                                                  name='updatedColumn'
-                                                  value={updatedColumn}
+                                                  name='column'
+                                                  value={updatedItem.column}
                                                   inputProps={{ min: 0 }}
                                                   onChange={this.onChange}
                                              />

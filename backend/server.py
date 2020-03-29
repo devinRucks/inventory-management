@@ -74,10 +74,12 @@ def add_item():
 @app.route('/updateItem', methods=['GET', 'POST'])
 def update_item():
     item_info = request.get_json()
+    app.logger.info(item_info)
+    item_info.get('updatedItem', {}).get('row')
     item_name = item_info.get('itemName')
-    updated_row = item_info.get('updatedRow')
-    updated_column = item_info.get('updatedColumn')
-    updated_image_name = item_info.get('updatedImageName')
+    updated_row = item_info.get('updatedItem', {}).get('row')
+    updated_column = item_info.get('updatedItem', {}).get('column')
+    updated_image_name = item_info.get('updatedItem', {}).get('imageName')
 
     try:
         db.updateItem(item_name, updated_row,
