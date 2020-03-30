@@ -115,6 +115,8 @@ def get_all_items():
         app.logger.info("Not able to retrieve all items")
         return json.dumps(False)
 
+# BASICALLY THE SAME AS /retrieveItem, BUT RETURNS bool INSTEAD OF ITEM DATA
+
 
 @app.route('/itemSearch', methods=['GET', 'POST'])
 def item_search():
@@ -129,6 +131,23 @@ def item_search():
     else:
         # SEND FALSE BACK TO CLIENT (ITEM DOES NOT EXIST)
         return json.dumps(False)
+
+    return 'OK'
+
+
+@app.route('/retrieveItem', methods=['GET', 'POST'])
+def retrieve_item():
+    item = request.get_json()
+    item_name = item.get('itemName')
+
+    # SEARCH DB TO SEE IF ITEM EXISTS
+    result = db.searchItem(item_name)
+    if result:
+        # SEND TRUE BACK TO CLIENT
+        return json.dumps(result[0])
+    else:
+        # SEND FALSE BACK TO CLIENT (ITEM DOES NOT EXIST)
+        return json.dumps(result)
 
     return 'OK'
 

@@ -1,8 +1,9 @@
 import React from 'react'
-import { Input, Button } from '@material-ui/core'
 import axios from 'axios'
-import '../../scss/Main.scss'
 import { RemoveItemMsg } from '../Msg'
+import { Input, Button } from '@material-ui/core'
+
+import '../../scss/Main.scss'
 
 
 export default class Remove extends React.Component {

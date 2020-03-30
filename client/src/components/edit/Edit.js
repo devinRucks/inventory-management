@@ -40,12 +40,13 @@ export default class Edit extends React.Component {
      }
 
      componentDidMount = () => {
+          // Need all items for drop down menu
           axios.get('/getAllItems')
                .then(res => res.data)
                .then(result => {
                     if (result) {
                          this.setState({
-                              items: utils.convertToArrayOfObjects(result) // DONT NEED ALL ITEMS, MAYBE ONLY RETURN THE ITEM THAT MATCHES ITEMNAME
+                              items: utils.convertToArrayOfObjects(result)
                          })
                     }
                })
@@ -97,12 +98,12 @@ export default class Edit extends React.Component {
      /* Called from FileUpload component. Retrieves name of file selected and updates state.
      * Need this for when you send the item info (name, quantity, row, column, filename) to server
      */
-     updatedImageUpload = (updatedImageName) => {
+     updatedImageUpload = (updatedImageName, updatedImageURL) => {
           console.log(updatedImageName)
           this.setState(prevState => {
                let updatedItem = Object.assign({}, prevState.updatedItem) // creating copy of state variable updatedItem
                updatedItem.imageName = updatedImageName; // update the imageName property, assign a new value 
-               return { updatedItem };
+               return { updatedItem, updatedImageURL };
           })
      }
 
@@ -130,8 +131,7 @@ export default class Edit extends React.Component {
      }
 
      render() {
-          const { items, currentItem, updatedItem, currentImageURL, searchClicked, showMsg, updateItemSuccess, loading } = this.state;
-          console.log(updateItemSuccess)
+          const { items, currentItem, updatedItem, currentImageURL, updatedImageURL, searchClicked, showMsg, updateItemSuccess, loading } = this.state;
           return (
                <div id="Edit-component">
                     <section id="edit-info-container">
@@ -150,12 +150,15 @@ export default class Edit extends React.Component {
                               </Button>
                          </div>
                          <div id="current-updated-container">
-                              <CurrentItemPreview
-                                   currentItem={currentItem}
-                                   imageURL={currentImageURL}
-                                   loading={loading}
-                                   updatedItem={updateItemSuccess ? updatedItem : null}
-                              />
+                              {searchClicked &&
+                                   <CurrentItemPreview
+                                        currentItem={currentItem}
+                                        currentImageURL={currentImageURL}
+                                        updatedImageURL={updateItemSuccess ? updatedImageURL : ''}
+                                        loading={loading}
+                                        updatedItem={updateItemSuccess ? updatedItem : null}
+                                   />
+                              }
 
                               <section id="updated-item-container">
                                    <section id="updated-title-container">

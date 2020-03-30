@@ -36,7 +36,7 @@ export default class FileUpload extends React.Component {
 
                this.setState({ fileName, imageURL, loading: false }, () => {
                     // sends filename to parent component to be used when sending data to server
-                    this.props.handleUpload(this.state.fileName)
+                    this.props.handleUpload(this.state.fileName, this.state.imageURL)
                })
           }
 

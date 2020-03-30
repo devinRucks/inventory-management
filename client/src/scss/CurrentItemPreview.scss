@@ -17,6 +17,23 @@
           height: 1px;
      }
 
+     @keyframes fadeGreenBg {
+          0% { background: #F5F5F5 }
+          15% { background: #00a93e }
+          50% { background: #00a93e }
+          100% { background: #F5F5F5 }
+     }
+
+     .valueWasChanged {
+          animation: fadeGreenBg 1.5s ease-out;
+          color: #00a93e;
+          font-size: 20px;
+     }
+
+     .valueWasNotChanged {
+          font-size: 20px;
+     }
+
      #item-image-container {
           grid-area: image;
           display: flex;
@@ -68,7 +85,7 @@
           }
           .quantity-value {
                // padding-top: 12px;
-               font-size: 18px;
+               font-size: 20px;
           }
      }
 
@@ -84,8 +101,7 @@
           }
 
           .row-value {
-               // padding-top: 12px;
-               font-size: 18px;
+
           }
      }
 

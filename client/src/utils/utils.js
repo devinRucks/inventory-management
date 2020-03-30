@@ -1,3 +1,4 @@
+
 import { storageRef } from '../firebaseConfig'
 
 
@@ -9,6 +10,7 @@ const tabSelectedStyling = {
 const validItemValueStyle = { color: '#00a93e' }
 
 const invalidItemValueStyle = { color: '#fa0000' }
+
 
 const getFirebaseImageURL = (imageId) => {
      const imageURL = storageRef.child(imageId).getDownloadURL()
@@ -26,4 +28,10 @@ const convertToArrayOfObjects = (lists) => {
      return result
 }
 
-export { tabSelectedStyling, validItemValueStyle, invalidItemValueStyle, getFirebaseImageURL, convertToArrayOfObjects }
+export {
+     tabSelectedStyling,
+     validItemValueStyle,
+     invalidItemValueStyle,
+     getFirebaseImageURL,
+     convertToArrayOfObjects
+}
