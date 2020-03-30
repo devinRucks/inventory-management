@@ -1,10 +1,45 @@
 import React from 'react'
 import ClipLoader from "react-spinners/ClipLoader"
+import * as utils from '../utils/utils'
 import '../scss/CurrentItemPreview.scss'
 
 const CurrentItemPreview = (props) => {
+     const { currentItem, imageURL, loading, updatedItem } = props;
 
-     const { item, imageURL, loading } = props;
+     // TODO:
+     // Investigate why this component updates so many times
+     // Set currentItem.row = updatedItemValues if there was a change
+
+     // Placeholder for updatedItem values since not every parent component passes downt the same values
+     const updatedItemValues = {
+          quantity: 0,
+          row: 0,
+          column: 0,
+          imageName: ''
+     }
+
+     // use useEffect() with hooks?
+     if (updatedItem !== null) {
+          Object.keys(updatedItemValues).forEach(key => {
+               if (updatedItemValues[key] !== updatedItem[key] && updatedItem[key] !== undefined) {
+                    updatedItemValues[key] = updatedItem[key]
+               }
+          })
+     }
+
+     console.log(updatedItemValues)
+
+
+     const valueWasChanged = (currentItemVal, updatedItemVal) => {
+          if (updatedItemVal != null) {
+               if (updatedItemVal !== currentItemVal && updatedItemVal !== 0) {
+                    return true
+               } else {
+                    return false
+               }
+          }
+     }
+
 
      return (
           <div id="current-item-preview-container">
@@ -22,25 +57,34 @@ const CurrentItemPreview = (props) => {
                </section>
 
                <section id="item-name-container">
-                    <div className="itemName"> {item.name} </div>
+                    <div className="itemName"> {currentItem.name} </div>
                </section>
 
                <section id="item-quantity-container">
                     <div className="quantity-title">Quantity</div>
                     <hr className="horizontal-row"></hr>
-                    <div className="quantity-value"> {item.quantity} </div>
+                    <div className="quantity-value">
+                         {currentItem.quantity}
+                    </div>
                </section>
 
                <section id="item-row-container">
                     <div className="row-title">Row</div>
                     <hr className="horizontal-row"></hr>
-                    <div className="row-value"> {item.row} </div>
+                    <div className="row-value"
+                         style={valueWasChanged(currentItem.row, updatedItemValues.row) ?
+                              utils.validItemValueStyle :
+                              utils.invalidItemValueStyle
+                         }
+                    >
+                         {currentItem.row}
+                    </div>
                </section>
 
                <section id="item-column-container">
                     <div className="column-title">Column</div>
                     <hr className="horizontal-row"></hr>
-                    <div className="column-value"> {item.column} </div>
+                    <div className="column-value"> {currentItem.column} </div>
                </section>
           </div>
      )

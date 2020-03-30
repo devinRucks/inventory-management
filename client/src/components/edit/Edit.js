@@ -87,7 +87,6 @@ export default class Edit extends React.Component {
      }
 
      onChange = (e) => {
-          // ADD ERROR HANDLING IF VALUE IS NaN
           const value = parseInt(e.target.value) || 0;
           const name = e.target.name
           const updatedItem = Object.assign({}, this.state.updatedItem)
@@ -132,6 +131,7 @@ export default class Edit extends React.Component {
 
      render() {
           const { items, currentItem, updatedItem, currentImageURL, searchClicked, showMsg, updateItemSuccess, loading } = this.state;
+          console.log(updateItemSuccess)
           return (
                <div id="Edit-component">
                     <section id="edit-info-container">
@@ -151,9 +151,10 @@ export default class Edit extends React.Component {
                          </div>
                          <div id="current-updated-container">
                               <CurrentItemPreview
-                                   item={currentItem}
+                                   currentItem={currentItem}
                                    imageURL={currentImageURL}
                                    loading={loading}
+                                   updatedItem={updateItemSuccess ? updatedItem : null}
                               />
 
                               <section id="updated-item-container">
