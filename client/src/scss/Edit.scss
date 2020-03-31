@@ -1,7 +1,9 @@
 $off-white: #F5F5F5;
 $teal: #056571;
 
-$font-size: 18px;
+$label-font-size: 19px;
+$value-text-font-size: 18px;
+$value-int-font-size: 20px;
 
 #Edit-component {
      padding: 30px 35px;
@@ -9,7 +11,7 @@ $font-size: 18px;
 
      #edit-info-container {
           border: 2px #333 solid;
-          height: 455px;
+          height: 600px;
           padding-left: 20px;
           max-width: 900px;
           min-width: 750px;
@@ -53,47 +55,72 @@ $font-size: 18px;
                     height: 2px;
                }
 
-               .updated-info-number {
-                    font-size: $font-size;
+               .input-value-number {
+                    font-size: $value-int-font-size;
                     height: 25px;
                     margin-left: 5px;
-                    width: 35px;
+                    width: 40px;
+               }
+
+               .input-value-text {
+                    font-size: $value-text-font-size;
+                    margin-left: 10px;
+                    width: 200px;
                }
 
                .input-label {
-                    font-size: $font-size;
-                    margin-right: 5px;
-               }
-
-               .input-value {
-                    font-size: $font-size;
-                    width: 20px;
-                    margin-left: 5px;
+                    font-size: $label-font-size;
+                    // margin-right: 10px;
                }
 
                #updated-item-container {
+                    border: 1px red solid;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
                     align-items: flex-start;
                     margin-top: 20px;
                     font-size: 14px;
-                    height: 150px;
+                    height: 300px;
 
-                    #updated-row-column-container {
+                    #updated-name-container {
+                         border: 1px red solid;
+                    }
+
+                    #updated-quantity-container {
+                         display: flex; 
+                         flex-direction: row;
+                         justify-content: space-between;
+                         width: 70%;
+                         border: 1px green solid;
+                    }
+
+                    #updated-row-container {
+                         border: 1px red solid;
                          display: flex;
                          flex-direction: row;
                          justify-content: space-between;
                          align-items: center;
-                         width: 210px;
+                         width: 70%;
+                    }
+
+                    #updated-column-container {
+                         border: 1px red solid;
+                         display: flex;
+                         flex-direction: row;
+                         justify-content: space-between;
+                         align-items: center;
+                         width: 70%;
                     }
 
                     #updated-image-container {
+                         // border: 1px green solid;
                          display: flex;
                          flex-direction: row;
                          justify-content: space-between;
                          align-items: center;
-                         width: 250px;
+                         width: 100%;
+
                     }
                }
                

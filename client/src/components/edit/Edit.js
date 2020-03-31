@@ -27,6 +27,8 @@ export default class Edit extends React.Component {
                searchClicked: false,
                currentItem: {},
                updatedItem: {
+                    itemName: '',
+                    quantity: 0,
                     row: 0,
                     column: 0,
                     imageName: ''
@@ -71,17 +73,27 @@ export default class Edit extends React.Component {
                          searchClicked: true,
                          showMsg: false,
                          updatedItem: {
+                              itemName: '',
+                              quantity: 0,
                               row: 0,
                               column: 0,
                               imageName: ''
-                         },
+                         }
                     })
                }
           })
      }
 
-     onChange = (e) => {
+     onChangeInt = (e) => {
           const value = parseInt(e.target.value) || 0;
+          const name = e.target.name
+          const updatedItem = Object.assign({}, this.state.updatedItem)
+          updatedItem[name] = value
+          this.setState({ updatedItem })
+     }
+
+     onChangeText = (e) => {
+          const value = e.target.value
           const name = e.target.name
           const updatedItem = Object.assign({}, this.state.updatedItem)
           updatedItem[name] = value
@@ -151,13 +163,43 @@ export default class Edit extends React.Component {
                                    />
                               }
 
-                              <section id="updated-item-container">
-                                   <section id="updated-title-container">
-                                        <h2>Update</h2>
-                                        <hr className="horizontal-row" />
-                                   </section>
+                              {searchClicked &&
+                                   <section id="updated-item-container">
+                                        <section id="updated-title-container">
+                                             <h2>Update</h2>
+                                             <hr className="horizontal-row" />
+                                        </section>
 
-                                   <section id="updated-row-column-container">
+                                        <section id="updated-name-container">
+                                             <label className="input-label">Name:</label>
+                                             <Input
+                                                  placeholder="Enter Updated Name.."
+                                                  type="text"
+                                                  className="input-value-text"
+                                                  name="itemName"
+                                                  value={updatedItem.itemName}
+                                                  onChange={this.onChangeText}
+                                             />
+                                        </section>
+
+                                        <section id="updated-quantity-container">
+                                             <label className="input-label">Quantity:</label>
+                                             <Input
+                                                  type="number"
+                                                  style={currentItem.quantity === updatedItem.quantity ||
+                                                       updatedItem.quantity === 0 ?
+                                                       utils.invalidItemValueStyle :
+                                                       utils.validItemValueStyle
+                                                  }
+                                                  className="input-value-number"
+                                                  name='quantity'
+                                                  value={updatedItem.quantity}
+                                                  inputProps={{ min: 0 }}
+                                                  onChange={this.onChangeInt}
+                                             />
+                                        </section>
+
+
                                         <section id="updated-row-container">
                                              <label className="input-label">Row:</label>
                                              <Input
@@ -167,11 +209,11 @@ export default class Edit extends React.Component {
                                                        utils.invalidItemValueStyle :
                                                        utils.validItemValueStyle
                                                   }
-                                                  className="updated-info-number"
+                                                  className="input-value-number"
                                                   name='row'
                                                   value={updatedItem.row}
                                                   inputProps={{ min: 0 }}
-                                                  onChange={this.onChange}
+                                                  onChange={this.onChangeInt}
                                              />
                                         </section>
 
@@ -184,30 +226,32 @@ export default class Edit extends React.Component {
                                                        utils.invalidItemValueStyle :
                                                        utils.validItemValueStyle
                                                   }
-                                                  className="updated-info-number"
+                                                  className="input-value-number"
                                                   name='column'
                                                   value={updatedItem.column}
                                                   inputProps={{ min: 0 }}
-                                                  onChange={this.onChange}
+                                                  onChange={this.onChangeInt}
                                              />
                                         </section>
-                                   </section>
 
-                                   <section id="updated-image-container">
-                                        <label className="input-label">Image:</label>
-                                        < FileUpload handleUpload={this.updatedImageUpload} />
+                                        <section id="updated-image-container">
+                                             <label className="input-label">Image:</label>
+                                             < FileUpload handleUpload={this.updatedImageUpload} />
+                                        </section>
                                    </section>
-                              </section>
+                              }
                          </div>
 
-                         <Button
-                              variant="contained"
-                              className="update-btn"
-                              color="primary"
-                              onClick={this.updateItem}
-                         >
-                              Update
-                         </Button>
+                         {searchClicked &&
+                              <Button
+                                   variant="contained"
+                                   className="update-btn"
+                                   color="primary"
+                                   onClick={this.updateItem}
+                              >
+                                   Update
+                              </Button>
+                         }
 
                          {showMsg && < UpdatedItemMsg updateSuccess={updateItemSuccess} />}
                     </section>
