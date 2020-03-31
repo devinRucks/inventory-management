@@ -21,11 +21,31 @@ const getFirebaseImageURL = (imageId) => {
 }
 
 // takes in list of lists from flask server and returns array of objects
-const convertToArrayOfObjects = (lists) => {
+const nestedListsToArrayOfObjects = (lists) => {
      const result = lists.map((
-          [name, quantity, row, column, imageId]) => (
-               { name, quantity, row, column, imageId }));
+          [name, quantity, row, column, imageName]) => (
+               { name, quantity, row, column, imageName }));
      return result
+}
+
+
+const singleListToObject = (list) => {
+     const itemObj = {
+          itemName: '',
+          quantity: 0,
+          row: 0,
+          column: 0,
+          imageName: ''
+     }
+     Object.keys(itemObj).forEach((key, index) => {
+          itemObj[key] = list[index]
+     })
+     return itemObj
+     // const result = list.map(([name, quantity, row, column, imageId]) => (
+     //      { name, quantity, row, column, imageId }
+     // ))
+
+     // return result
 }
 
 export {
@@ -33,5 +53,6 @@ export {
      validItemValueStyle,
      invalidItemValueStyle,
      getFirebaseImageURL,
-     convertToArrayOfObjects
+     nestedListsToArrayOfObjects,
+     singleListToObject
 }

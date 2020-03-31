@@ -31,11 +31,9 @@ export default class Edit extends React.Component {
                     column: 0,
                     imageName: ''
                },
-               currentImageURL: '',
                updatedImageURL: '',
                showMsg: false,
                updateItemSuccess: false,
-               loading: false
           }
      }
 
@@ -46,7 +44,7 @@ export default class Edit extends React.Component {
                .then(result => {
                     if (result) {
                          this.setState({
-                              items: utils.convertToArrayOfObjects(result)
+                              items: utils.nestedListsToArrayOfObjects(result)
                          })
                     }
                })
@@ -77,11 +75,6 @@ export default class Edit extends React.Component {
                               column: 0,
                               imageName: ''
                          },
-                    }, async () => {
-                         this.setState({ loading: true })
-                         // ADD ERROR HANDLING IF imageId IS EMPTY
-                         const url = await utils.getFirebaseImageURL(this.state.currentItem.imageId)
-                         this.setState({ currentImageURL: url, loading: false })
                     })
                }
           })
@@ -131,7 +124,7 @@ export default class Edit extends React.Component {
      }
 
      render() {
-          const { items, currentItem, updatedItem, currentImageURL, updatedImageURL, searchClicked, showMsg, updateItemSuccess, loading } = this.state;
+          const { items, currentItem, updatedItem, updatedImageURL, searchClicked, showMsg, updateItemSuccess } = this.state;
           return (
                <div id="Edit-component">
                     <section id="edit-info-container">
@@ -153,9 +146,7 @@ export default class Edit extends React.Component {
                               {searchClicked &&
                                    <CurrentItemPreview
                                         currentItem={currentItem}
-                                        currentImageURL={currentImageURL}
                                         updatedImageURL={updateItemSuccess ? updatedImageURL : ''}
-                                        loading={loading}
                                         updatedItem={updateItemSuccess ? updatedItem : null}
                                    />
                               }

@@ -1,8 +1,10 @@
 import React from 'react'
 import axios from 'axios'
+import ItemSelect from '../ItemSelect'
 import { RemoveItemMsg } from '../Msg'
+import CurrentItemPreview from '../CurrentItemPreview'
+import * as utils from '../../utils/utils'
 import { Input, Button } from '@material-ui/core'
-
 import '../../scss/Main.scss'
 
 
@@ -10,37 +12,68 @@ export default class Remove extends React.Component {
      constructor(props) {
           super(props);
           this.state = {
+               items: [],
                itemName: '',
-               itemQuantity: 0,
+               currentItem: {},
+               removedItem: { quantity: 0 },
                itemExists: false,
                showMsg: false,
                removeItemSuccess: false
           }
      }
 
+     componentDidMount = () => {
+          // Need all items for drop down menu
+          axios.get('/getAllItems')
+               .then(res => res.data)
+               .then(result => {
+                    if (result) {
+                         this.setState({
+                              items: utils.nestedListsToArrayOfObjects(result)
+                         })
+                    }
+               })
+     }
+
+     /**
+      * Callback function for 'ItemSelect' component. 
+      * @param {string} itemName - Value that was selected from dropdown
+      */
+     selectedItemValue = (itemName) => { this.setState({ itemName }) }
+
      /** 
      * Called when 'Search' button is clicked.
      * Sends --> 'itemName' to flask server to see if it exists in DB
-     * @returns {boolean} result is true if search was successful, false if not
+     * @returns {array} result is item data in array form ["LED", 10, 4, 2, "Led.jpg"]
      */
      handleSubmit = () => {
           const { itemName } = this.state;
-          axios.post('/itemSearch', { itemName })
+          axios.post('/retrieveItem', { itemName })
                .then(res => res.data)
                .then(result => {
-                    this.setState({
-                         itemExists: result,
-                         showMsg: false
-                    })
+                    if (result) {
+                         this.setState({
+                              itemExists: true,
+                              currentItem: utils.singleListToObject(result),
+                              showMsg: false
+                         })
+                    } else {
+                         this.setState({
+                              itemExists: false,
+                              showMsg: false
+                         })
+                    }
                })
                .catch(err => console.log(err))
      }
 
      onChange = (e) => {
-          const value = e.target.value;
-          this.setState({
-               ...this.state, [e.target.name]: value
-          })
+          const value = parseInt(e.target.value) || 0;
+          const key = e.target.name
+          const removedItem = Object.assign({}, this.state.removedItem)
+          removedItem[key] = value
+          this.setState({ removedItem })
+
      }
 
      /** 
@@ -48,9 +81,9 @@ export default class Remove extends React.Component {
       * @returns {boolean} result is true if removing item was successful, false if not
       */
      removeItem = () => {
-          const { itemName, itemQuantity } = this.state;
+          const { itemName, removedItem } = this.state;
           axios.post('/removeItem', {
-               itemName, itemQuantity
+               itemName, quantity: removedItem.quantity
           })
                .then(res => res.data)
                .then(result => {
@@ -66,18 +99,16 @@ export default class Remove extends React.Component {
      }
 
      render() {
-          const { itemQuantity, showMsg, itemExists, removeItemSuccess } = this.state;
+          const { items, currentItem, removedItem, showMsg, itemExists, removeItemSuccess } = this.state;
 
           return (
                <div id="Remove-component">
                     <section id="item-info-container">
                          <div id="input-container">
                               <label className="info-label">Remove Item:</label>
-                              <Input
-                                   className="info-input text"
-                                   name="itemName"
-                                   onChange={this.onChange}
-                              />
+                              <ItemSelect
+                                   items={items}
+                                   onChange={this.selectedItemValue} />
                               <Button
                                    variant="contained"
                                    className="submit-btn"
@@ -90,13 +121,18 @@ export default class Remove extends React.Component {
 
                          {itemExists &&
                               <>
+                                   < CurrentItemPreview
+                                        currentItem={currentItem}
+                                        updatedItem={removeItemSuccess ?
+                                             removedItem : null}
+                                   />
                                    <div id="input-container">
                                         <label className="info-label">Quantity:</label>
                                         <Input
                                              type="number"
                                              className="info-input number"
-                                             name="itemQuantity"
-                                             value={itemQuantity}
+                                             name="quantity"
+                                             value={removedItem.quantity}
                                              inputProps={{ min: 0 }}
                                              onChange={this.onChange}
                                         />

@@ -25,7 +25,7 @@ export default class Inventory extends React.Component {
                .then(result => {
                     if (result) {
                          this.setState({
-                              items: utils.convertToArrayOfObjects(result)
+                              items: utils.nestedListsToArrayOfObjects(result)
                          })
                     }
                })
@@ -38,7 +38,7 @@ export default class Inventory extends React.Component {
                     {items.map((item, index) =>
                          < ItemPreview
                               key={index}
-                              image={item.imageId}
+                              image={item.imageName}
                               itemName={item.name}
                               itemQuantity={item.quantity}
                               itemRow={item.row}
