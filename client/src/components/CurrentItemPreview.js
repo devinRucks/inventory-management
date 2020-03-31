@@ -10,6 +10,7 @@ export default class CurrentItemPreview extends React.Component {
           super(props);
           this.state = {
                updatedItemValues: {
+                    itemName: '',
                     quantity: 0,
                     row: 0,
                     column: 0,
@@ -22,6 +23,7 @@ export default class CurrentItemPreview extends React.Component {
 
      componentDidMount = async () => {
           console.log("MOUNTED")
+          console.log(this.props.currentItem)
           // GETS currentImageURL
           this.setState({ loading: true })
           const url = await utils.getFirebaseImageURL(this.props.currentItem.imageName)
@@ -32,7 +34,6 @@ export default class CurrentItemPreview extends React.Component {
           if (prevProps.updatedItem !== this.props.updatedItem) {
                this.updateItemValuesWithNewProps()
           }
-
      }
 
      // Populates updatedItemValues with the values passed down into this component.
@@ -53,7 +54,7 @@ export default class CurrentItemPreview extends React.Component {
 
      valueWasChanged = (currentItemVal, updatedItemVal) => {
           if (updatedItemVal != null) {
-               if (updatedItemVal !== currentItemVal && updatedItemVal !== 0) {
+               if (updatedItemVal !== currentItemVal && updatedItemVal !== 0 && updatedItemVal !== '') {
                     return true
                } else {
                     return false
@@ -86,7 +87,12 @@ export default class CurrentItemPreview extends React.Component {
                     </section>
 
                     <section id="item-name-container">
-                         <div className="itemName"> {currentItem.name} </div>
+                         <div className="itemName">
+                              {this.valueWasChanged(currentItem.itemName, updatedItemValues.itemName) ?
+                                   updatedItemValues.itemName :
+                                   currentItem.itemName
+                              }
+                         </div>
                     </section>
 
                     <section id="item-quantity-container">

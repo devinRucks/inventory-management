@@ -74,7 +74,7 @@ $value-int-font-size: 20px;
                }
 
                #updated-item-container {
-                    border: 1px red solid;
+                    // border: 1px red solid;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
@@ -84,7 +84,7 @@ $value-int-font-size: 20px;
                     height: 300px;
 
                     #updated-name-container {
-                         border: 1px red solid;
+                         // border: 1px red solid;
                     }
 
                     #updated-quantity-container {
@@ -92,11 +92,11 @@ $value-int-font-size: 20px;
                          flex-direction: row;
                          justify-content: space-between;
                          width: 70%;
-                         border: 1px green solid;
+                         // border: 1px green solid;
                     }
 
                     #updated-row-container {
-                         border: 1px red solid;
+                         // border: 1px red solid;
                          display: flex;
                          flex-direction: row;
                          justify-content: space-between;
@@ -105,7 +105,7 @@ $value-int-font-size: 20px;
                     }
 
                     #updated-column-container {
-                         border: 1px red solid;
+                         // border: 1px red solid;
                          display: flex;
                          flex-direction: row;
                          justify-content: space-between;

@@ -9,15 +9,6 @@ import * as utils from '../../utils/utils'
 import '../../scss/Main.scss'
 import '../../scss/Edit.scss'
 
-// TODO: CREATE RESUABLE FUNCTION THAT GOES TO FIREBASE STORAGE AND RETURNS IMAGE URL
-
-/**
- * Allows updating a row, column, or image of a current item in the inventory.
- * 1.) Gets value of item needing to be updated, and attempts to find it in inventory
- * 2.) The markup will be updated showing the item's current row, column, and image
- * 3.) Regardless if only one value is changed, all of the updated values are sent to server anyways
- * 4.) The logic is done in DB to determine which values get updated.
- */
 export default class Edit extends React.Component {
      constructor(props) {
           super(props);
@@ -67,7 +58,7 @@ export default class Edit extends React.Component {
      handleSearch = () => {
           const { itemName, items } = this.state;
           items.forEach(item => {
-               if (item.name === itemName) {
+               if (item.itemName === itemName) {
                     this.setState({
                          currentItem: item,
                          searchClicked: true,
@@ -194,7 +185,7 @@ export default class Edit extends React.Component {
                                                   className="input-value-number"
                                                   name='quantity'
                                                   value={updatedItem.quantity}
-                                                  inputProps={{ min: 0 }}
+                                                  // inputProps={{ min: 0 }}
                                                   onChange={this.onChangeInt}
                                              />
                                         </section>

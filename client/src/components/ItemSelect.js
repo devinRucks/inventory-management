@@ -7,7 +7,7 @@ const ItemSelect = (props) => {
 
      const handleChange = (value) => {
           if (value !== null) {
-               props.onChange(value.name)
+               props.onChange(value.itemName)
           }
      }
 
@@ -22,8 +22,8 @@ const ItemSelect = (props) => {
                options={items}
                onChange={(event, value) => handleChange(value)}
                autoHighlight
-               getOptionLabel={option => option.name}
-               renderOption={option => option.name}
+               getOptionLabel={option => option.itemName}
+               renderOption={option => option.itemName}
                renderInput={params => (
                     <TextField
                          {...params}

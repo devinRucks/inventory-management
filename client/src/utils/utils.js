@@ -23,8 +23,8 @@ const getFirebaseImageURL = (imageId) => {
 // takes in list of lists from flask server and returns array of objects
 const nestedListsToArrayOfObjects = (lists) => {
      const result = lists.map((
-          [name, quantity, row, column, imageName]) => (
-               { name, quantity, row, column, imageName }));
+          [itemName, quantity, row, column, imageName]) => (
+               { itemName, quantity, row, column, imageName }));
      return result
 }
 
