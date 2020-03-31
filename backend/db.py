@@ -45,38 +45,57 @@ def addItem(itemName, quantity, row, column, img_id):
     conn.close()
 
 
-def updateItem(itemName, updated_row, updated_column, updated_img_id):
+def updateItem(item_name, updated_item):
     conn = makeConnection()
     db = conn.cursor()
 
-    current_item = searchItem(itemName)
+    current_item = searchItem(item_name)
+
+    current_name = current_item[0][0]
+    current_quantity = current_item[0][1]
     current_row = current_item[0][2]
     current_column = current_item[0][3]
     current_image_id = current_item[0][4]
 
+    # UPDATING NAME
+    if updated_item['itemName'] not in (current_name, ''):
+        try:
+            db.execute('UPDATE inventory SET item = ? WHERE item = ?',
+                       (updated_item['itemName'], item_name))
+        except Error as e:
+            print(e)
+
+    # UPDATING QUANTITY
+    if updated_item['quantity'] not in (current_quantity, 0, ''):
+        try:
+            db.execute('UPDATE inventory SET quantity = quantity + ? WHERE item = ?',
+                       (updated_item['quantity'], item_name))
+        except Error as e:
+            print(e)
+
     # UPDATING ROW
-    if updated_row not in (current_row, 0, ''):
+    if updated_item['row'] not in (current_row, 0, ''):
         try:
             db.execute('UPDATE inventory SET row = ? WHERE item = ?',
-                       (updated_row, itemName))
-        except:
-            pass
+                       (updated_item['row'], item_name))
+        except Error as e:
+            print(e)
 
     # UPDATING COLUMN
-    if updated_column not in (current_column, 0, ''):
+    if updated_item['column'] not in (current_column, 0, ''):
         try:
             db.execute('UPDATE inventory SET column = ? WHERE item = ?',
-                       (updated_column, itemName))
-        except:
-            pass
+                       (updated_item['column'], item_name))
+        except Error as e:
+            print(e)
 
     # UPDATING IMAGE_ID
-    if updated_img_id not in (current_image_id, ''):
+    if updated_item['imageName'] not in (current_image_id, ''):
         try:
             db.execute('UPDATE inventory SET img_id = ? WHERE item = ?',
-                       (updated_img_id, itemName))
-        except:
-            pass
+                       (updated_item['imageName'], item_name))
+        except Error as e:
+            print(e)
 
     conn.commit()
     conn.close()
@@ -92,20 +111,6 @@ def searchItem(itemName):
         return db.fetchall()
     except:
         print("Error: No item found in inventory..")
-
-    conn.commit()
-    conn.close()
-
-
-def removeItem(itemName, quantity):
-    conn = makeConnection()
-    db = conn.cursor()
-
-    try:
-        db.execute('UPDATE inventory SET quantity = quantity - ? WHERE item = ? AND quantity >= ?',
-                   (quantity, itemName, quantity))
-    except:
-        print("Error: The current quantity of ? is less than the amount you want to remove..", (itemName))
 
     conn.commit()
     conn.close()

@@ -45,7 +45,7 @@ export default class CurrentItemPreview extends React.Component {
                     if (updatedItemValues[key] !== updatedItem[key] && updatedItem[key] !== undefined) {
                          updatedItemValues[key] = updatedItem[key]
 
-                         this.setState({ updatedItemValues })
+                         this.setState({ updatedItemValues }, () => console.log(this.state.updatedItemValues))
                     }
                })
           }
