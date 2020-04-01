@@ -38,25 +38,37 @@ export default class CurrentItemPreview extends React.Component {
 
      // Populates updatedItemValues with the values passed down into this component.
      updateItemValuesWithNewProps = () => {
-          const { updatedItem } = this.props;
+          const { updatedItem, currentItem } = this.props;
           const { updatedItemValues } = this.state;
 
           if (updatedItem !== null) {
                Object.keys(updatedItemValues).forEach(key => {
-                    if (updatedItemValues[key] !== updatedItem[key] && updatedItem[key] !== undefined) {
-                         updatedItemValues[key] = updatedItem[key]
-
+                    // Adds the updatedItem.quantity to the currentItem.quantity then sends that value to updatedItemValues.quantity to be rendered
+                    if (key === 'quantity') {
+                         currentItem.quantity += updatedItem.quantity
+                         updatedItemValues.quantity = currentItem.quantity
                          this.setState({ updatedItemValues }, () => console.log(this.state.updatedItemValues))
+
+                    } else {
+                         // If the key is NOT quantity, just set updatedItemValues to whatever value was sent down thru this.props.updatedItem
+                         if (updatedItemValues[key] !== updatedItem[key] && updatedItem[key] !== undefined) {
+                              updatedItemValues[key] = updatedItem[key]
+
+                              this.setState({ updatedItemValues }, () => console.log(this.state.updatedItemValues))
+                         }
                     }
                })
           }
      }
 
+     // Determines the style and content to display. Either the currentItemVal or updatedItemVal
      valueWasChanged = (currentItemVal, updatedItemVal) => {
           if (updatedItemVal != null) {
                if (updatedItemVal !== currentItemVal && updatedItemVal !== 0 && updatedItemVal !== '') {
+                    // display updatedItemVal content and style
                     return true
                } else {
+                    // display currentItemVal content and style
                     return false
                }
           }
@@ -66,7 +78,6 @@ export default class CurrentItemPreview extends React.Component {
      render() {
           const { currentItem, updatedImageURL } = this.props;
           const { updatedItemValues, currentImageURL, loading } = this.state;
-
 
           return (
                <div id="current-item-preview-container">
