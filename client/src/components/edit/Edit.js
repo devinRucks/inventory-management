@@ -5,6 +5,7 @@ import FileUpload from '../FileUpload'
 import { UpdatedItemMsg } from '../Msg'
 import CurrentItemPreview from '../CurrentItemPreview'
 import { Input, Button } from '@material-ui/core'
+import FadeLoader from "react-spinners/FadeLoader"
 import * as utils from '../../utils/utils'
 import '../../scss/Main.scss'
 import '../../scss/Edit.scss'
@@ -27,6 +28,7 @@ export default class Edit extends React.Component {
                updatedImageURL: '',
                showMsg: false,
                updateItemSuccess: false,
+               loading: false
           }
      }
 
@@ -95,7 +97,6 @@ export default class Edit extends React.Component {
      * Need this for when you send the item info (name, quantity, row, column, filename) to server
      */
      updatedImageUpload = (updatedImageName, updatedImageURL) => {
-          console.log(updatedImageName)
           this.setState(prevState => {
                let updatedItem = Object.assign({}, prevState.updatedItem) // creating copy of state variable updatedItem
                updatedItem.imageName = updatedImageName; // update the imageName property, assign a new value 
@@ -111,23 +112,24 @@ export default class Edit extends React.Component {
       */
      updateItem = () => {
           const { itemName, updatedItem } = this.state;
-
+          this.setState({ loading: true })
           axios.post('/updateItem', { itemName, updatedItem })
                .then(res => res.data)
                .then(result => {
                     this.setState({
                          showMsg: true,
-                         updateItemSuccess: result
+                         updateItemSuccess: result,
+                         loading: false
                     })
                })
                .catch(err => {
-                    this.setState({ showMsg: true })
+                    this.setState({ showMsg: true, loading: false })
                     console.log(err)
                })
      }
 
      render() {
-          const { items, currentItem, updatedItem, updatedImageURL, searchClicked, showMsg, updateItemSuccess } = this.state;
+          const { items, currentItem, updatedItem, updatedImageURL, searchClicked, showMsg, updateItemSuccess, loading } = this.state;
           return (
                <div id="Edit-component">
                     <section id="edit-info-container">
@@ -233,18 +235,26 @@ export default class Edit extends React.Component {
                               }
                          </div>
 
-                         {searchClicked &&
-                              <Button
-                                   variant="contained"
-                                   className="update-btn"
-                                   color="primary"
-                                   onClick={this.updateItem}
-                              >
-                                   Update
-                              </Button>
-                         }
-
-                         {showMsg && < UpdatedItemMsg updateSuccess={updateItemSuccess} />}
+                         <section id="btn-loading-msg-container">
+                              <div id="updated-btn-container">
+                                   {(searchClicked && !loading) &&
+                                        <Button
+                                             variant="contained"
+                                             className="update-btn"
+                                             color="primary"
+                                             onClick={this.updateItem}
+                                        >
+                                             Update
+                                        </Button>
+                                   }
+                                   <FadeLoader
+                                        size={10}
+                                        color={"#056571"}
+                                        loading={loading}
+                                   />
+                              </div>
+                              {showMsg && < UpdatedItemMsg updateSuccess={updateItemSuccess} />}
+                         </section>
                     </section>
                </div>
           )

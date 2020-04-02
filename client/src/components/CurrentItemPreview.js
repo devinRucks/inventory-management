@@ -17,17 +17,15 @@ export default class CurrentItemPreview extends React.Component {
                     imageName: ''
                },
                currentImageURL: '',
-               loading: false
+               imgLoading: false
           }
      }
 
      componentDidMount = async () => {
-          console.log("MOUNTED")
-          console.log(this.props.currentItem)
           // GETS currentImageURL
-          this.setState({ loading: true })
+          this.setState({ imgLoading: true })
           const url = await utils.getFirebaseImageURL(this.props.currentItem.imageName)
-          this.setState({ currentImageURL: url, loading: false })
+          this.setState({ currentImageURL: url, imgLoading: false })
      }
 
      componentDidUpdate = (prevProps, prevState) => {
@@ -77,7 +75,7 @@ export default class CurrentItemPreview extends React.Component {
 
      render() {
           const { currentItem, updatedImageURL } = this.props;
-          const { updatedItemValues, currentImageURL, loading } = this.state;
+          const { updatedItemValues, currentImageURL, imgLoading } = this.state;
 
           return (
                <div id="current-item-preview-container">
@@ -92,7 +90,7 @@ export default class CurrentItemPreview extends React.Component {
                               <ClipLoader
                                    size={50}
                                    color={"#056571"}
-                                   loading={loading}
+                                   loading={imgLoading}
                               />
                          </div>
                     </section>
