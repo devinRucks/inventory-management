@@ -133,6 +133,7 @@ $value-int-font-size: 20px;
                align-items: center;
                height: 85px;
                width: 325px;
+               // border: 1px green solid;
 
                #updated-btn-container {
                     display: flex;
@@ -140,14 +141,23 @@ $value-int-font-size: 20px;
                     align-items: center;
                     height: 35px;
                     width: 85px;
+                    // border: 1px red solid;
 
-                    .update-btn {
+                    .update-btn-active {
                          outline: none;
                          cursor: pointer;
                          font-size: 14px;
                          border-radius: 5px;
                          background: $teal;
                          color: $off-white;
+                    }
+
+                    .update-btn-disabled {
+                         outline: none;
+                         font-size: 14px;
+                         border-radius: 5px;
+                         background: rgb(184, 184, 184);
+                         color: #333;
                     }
                }
           }

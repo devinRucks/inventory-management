@@ -28,7 +28,8 @@ export default class Edit extends React.Component {
                updatedImageURL: '',
                showMsg: false,
                updateItemSuccess: false,
-               loading: false
+               loading: false,
+               itemSent: false
           }
      }
 
@@ -111,25 +112,26 @@ export default class Edit extends React.Component {
       * @returns {boolean} result is true if update was successful, false if not
       */
      updateItem = () => {
-          const { itemName, updatedItem } = this.state;
+          const { itemNam, updatedItem } = this.state;
           this.setState({ loading: true })
-          axios.post('/updateItem', { itemName, updatedItem })
+          axios.post('/updateItem', { itemNam, updatedItem })
                .then(res => res.data)
                .then(result => {
                     this.setState({
                          showMsg: true,
                          updateItemSuccess: result,
-                         loading: false
+                         loading: false,
+                         itemSent: true
                     })
                })
                .catch(err => {
-                    this.setState({ showMsg: true, loading: false })
+                    this.setState({ showMsg: true, loading: false, itemSent: true })
                     console.log(err)
                })
      }
 
      render() {
-          const { items, currentItem, updatedItem, updatedImageURL, searchClicked, showMsg, updateItemSuccess, loading } = this.state;
+          const { items, currentItem, updatedItem, updatedImageURL, searchClicked, showMsg, updateItemSuccess, loading, itemSent } = this.state;
           return (
                <div id="Edit-component">
                     <section id="edit-info-container">
@@ -156,7 +158,7 @@ export default class Edit extends React.Component {
                                    />
                               }
 
-                              {searchClicked &&
+                              {(searchClicked && !updateItemSuccess) &&
                                    <section id="updated-item-container">
                                         <section id="updated-title-container">
                                              <h2>Update</h2>
@@ -170,6 +172,7 @@ export default class Edit extends React.Component {
                                                   type="text"
                                                   className="input-value-text"
                                                   name="itemName"
+                                                  disabled={itemSent}
                                                   value={updatedItem.itemName}
                                                   onChange={this.onChangeText}
                                              />
@@ -186,8 +189,8 @@ export default class Edit extends React.Component {
                                                   }
                                                   className="input-value-number"
                                                   name='quantity'
+                                                  disabled={itemSent}
                                                   value={updatedItem.quantity}
-                                                  // inputProps={{ min: 0 }}
                                                   onChange={this.onChangeInt}
                                              />
                                         </section>
@@ -204,6 +207,7 @@ export default class Edit extends React.Component {
                                                   }
                                                   className="input-value-number"
                                                   name='row'
+                                                  disabled={itemSent}
                                                   value={updatedItem.row}
                                                   inputProps={{ min: 0 }}
                                                   onChange={this.onChangeInt}
@@ -221,6 +225,7 @@ export default class Edit extends React.Component {
                                                   }
                                                   className="input-value-number"
                                                   name='column'
+                                                  disabled={itemSent}
                                                   value={updatedItem.column}
                                                   inputProps={{ min: 0 }}
                                                   onChange={this.onChangeInt}
@@ -240,8 +245,9 @@ export default class Edit extends React.Component {
                                    {(searchClicked && !loading) &&
                                         <Button
                                              variant="contained"
-                                             className="update-btn"
+                                             className={itemSent ? "update-btn-disabled" : "update-btn-active"}
                                              color="primary"
+                                             disabled={itemSent}
                                              onClick={this.updateItem}
                                         >
                                              Update
