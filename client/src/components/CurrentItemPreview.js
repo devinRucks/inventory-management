@@ -29,7 +29,7 @@ export default class CurrentItemPreview extends React.Component {
      }
 
      componentDidUpdate = (prevProps, prevState) => {
-          if (prevProps.updatedItem !== this.props.updatedItem) {
+          if (prevProps.updatedItem !== this.props.updatedItem && prevProps.currentItem.itemName === this.props.currentItem.itemName) {
                this.updateItemValuesWithNewProps()
           }
      }

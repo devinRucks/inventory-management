@@ -13,7 +13,6 @@ export default class Add extends React.Component {
                itemQuantity: 0,
                itemRow: 0,
                itemColumn: 0,
-               imageData: '',
                fileName: '',
                showInputs: false,
                itemExists: false,

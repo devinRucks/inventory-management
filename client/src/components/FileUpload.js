@@ -3,6 +3,7 @@ import { Button } from '@material-ui/core'
 import { storageRef } from '../firebaseConfig'
 import * as utils from '../utils/utils'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import LockIcon from '@material-ui/icons/Lock'
 import ClipLoader from "react-spinners/ClipLoader"
 import '../scss/FileUpload.scss'
 
@@ -65,14 +66,16 @@ export default class FileUpload extends React.Component {
                          accept="image/*"
                          id="item-image-upload"
                          onChange={this.sendToFirebase}
-                         type="file" />
+                         type="file"
+                         disabled={this.props.itemSent} />
                     <label htmlFor="item-image-upload">
                          <Button
                               variant="contained"
                               color="default"
                               component="span"
+                              disabled={this.props.itemSent}
                               className="upload-btn"
-                              startIcon={<CloudUploadIcon />}
+                              startIcon={this.props.itemSent ? <LockIcon /> : <CloudUploadIcon />}
                          >
                               Upload
                          </Button>

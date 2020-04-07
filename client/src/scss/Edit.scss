@@ -132,15 +132,15 @@ $value-int-font-size: 20px;
                justify-content: space-between;
                align-items: center;
                height: 85px;
-               width: 325px;
+               width: 370px;
                // border: 1px green solid;
 
                #updated-btn-container {
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    height: 35px;
-                    width: 85px;
+                    // height: 35px;
+                    // width: 85px;
                     // border: 1px red solid;
 
                     .update-btn-active {
@@ -153,11 +153,34 @@ $value-int-font-size: 20px;
                     }
 
                     .update-btn-disabled {
+                         // width: 95px;
+                         opacity: .5;
                          outline: none;
                          font-size: 14px;
                          border-radius: 5px;
                          background: rgb(184, 184, 184);
                          color: #333;
+                    }
+               }
+
+               #msg-container {
+                    font-size: 15px;
+                    // border: 1px red solid;
+               }
+
+               #refresh-icon {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    cursor: pointer;
+                    // border: 1px red solid;
+                    transform: rotate(180deg);
+                    transition: transform 0.35s;
+                    // transition: transform .5s ease-out;
+
+                    &:active {
+                         transform: rotate(0deg);
+                         transition:  0s;
                     }
                }
           }

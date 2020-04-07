@@ -5,6 +5,8 @@ import FileUpload from '../FileUpload'
 import { UpdatedItemMsg } from '../Msg'
 import CurrentItemPreview from '../CurrentItemPreview'
 import { Input, Button } from '@material-ui/core'
+import RefreshIcon from '@material-ui/icons/Autorenew';
+import LockIcon from '@material-ui/icons/Lock'
 import FadeLoader from "react-spinners/FadeLoader"
 import * as utils from '../../utils/utils'
 import '../../scss/Main.scss'
@@ -72,7 +74,9 @@ export default class Edit extends React.Component {
                               row: 0,
                               column: 0,
                               imageName: ''
-                         }
+                         },
+                         itemSent: false,
+                         updateItemSuccess: false
                     })
                }
           })
@@ -112,9 +116,9 @@ export default class Edit extends React.Component {
       * @returns {boolean} result is true if update was successful, false if not
       */
      updateItem = () => {
-          const { itemNam, updatedItem } = this.state;
+          const { itemName, updatedItem } = this.state;
           this.setState({ loading: true })
-          axios.post('/updateItem', { itemNam, updatedItem })
+          axios.post('/updateItem', { itemName, updatedItem })
                .then(res => res.data)
                .then(result => {
                     this.setState({
@@ -128,6 +132,21 @@ export default class Edit extends React.Component {
                     this.setState({ showMsg: true, loading: false, itemSent: true })
                     console.log(err)
                })
+     }
+
+     handleRefresh = () => {
+          this.setState({
+               updatedItem: {
+                    itemName: '',
+                    quantity: 0,
+                    row: 0,
+                    column: 0,
+                    imageName: ''
+               },
+               updateItemSuccess: false,
+               itemSent: false,
+               showMsg: false
+          })
      }
 
      render() {
@@ -158,7 +177,7 @@ export default class Edit extends React.Component {
                                    />
                               }
 
-                              {(searchClicked && !updateItemSuccess) &&
+                              {searchClicked &&
                                    <section id="updated-item-container">
                                         <section id="updated-title-container">
                                              <h2>Update</h2>
@@ -234,7 +253,9 @@ export default class Edit extends React.Component {
 
                                         <section id="updated-image-container">
                                              <label className="input-label">Image:</label>
-                                             < FileUpload handleUpload={this.updatedImageUpload} />
+                                             < FileUpload
+                                                  handleUpload={this.updatedImageUpload}
+                                                  itemSent={itemSent} />
                                         </section>
                                    </section>
                               }
@@ -245,10 +266,12 @@ export default class Edit extends React.Component {
                                    {(searchClicked && !loading) &&
                                         <Button
                                              variant="contained"
-                                             className={itemSent ? "update-btn-disabled" : "update-btn-active"}
-                                             color="primary"
+                                             color="default"
+                                             component="span"
                                              disabled={itemSent}
+                                             className={itemSent ? "update-btn-disabled" : "update-btn-active"}
                                              onClick={this.updateItem}
+                                             startIcon={itemSent ? <LockIcon /> : ''}
                                         >
                                              Update
                                         </Button>
@@ -259,7 +282,12 @@ export default class Edit extends React.Component {
                                         loading={loading}
                                    />
                               </div>
-                              {showMsg && < UpdatedItemMsg updateSuccess={updateItemSuccess} />}
+                              <div id="refresh-icon" onClick={this.handleRefresh}>
+                                   {showMsg && < RefreshIcon />}
+                              </div>
+                              <div id="msg-container">
+                                   {showMsg && < UpdatedItemMsg updateSuccess={updateItemSuccess} />}
+                              </div>
                          </section>
                     </section>
                </div>
