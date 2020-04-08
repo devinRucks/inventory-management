@@ -19,6 +19,7 @@ export default class CurrentItemPreview extends React.Component {
 
      componentDidUpdate = (prevProps) => {
           if (prevProps.currentItem.imageName !== this.props.currentItem.imageName) {
+               this.setState({ imageURL: '' })
                this.getImageURL()
           }
      }
@@ -35,7 +36,7 @@ export default class CurrentItemPreview extends React.Component {
                <div id="current-item-preview-container">
                     <section id="item-image-container">
                          <div className="image-placeholder">
-                              {this.state.imageName !== '' &&
+                              {this.state.imageURL !== '' &&
                                    <img className="image" alt="item" src={this.state.imageURL}></img>
                               }
                               <ClipLoader
