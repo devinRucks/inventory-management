@@ -27,16 +27,29 @@ export default class Edit extends React.Component {
                     column: 0,
                     imageName: ''
                },
-               updatedImageURL: '',
+               currentImageURL: '',
                showMsg: false,
                updateItemSuccess: false,
                loading: false,
-               itemSent: false
+               disableButtons: false
           }
      }
 
      componentDidMount = () => {
           // Need all items for drop down menu
+          this.getAllItems()
+     }
+
+     componentDidUpdate = (prevProps, prevState) => {
+          // If there was an update to an item, need to get new item values from DB.
+          // If you don't have this, when you switch between items, it will reload the old values, 
+          // not the updated ones.
+          if (prevState.updatedItem !== this.state.updatedItem) {
+               this.getAllItems()
+          }
+     }
+
+     getAllItems = () => {
           axios.get('/getAllItems')
                .then(res => res.data)
                .then(result => {
@@ -62,6 +75,7 @@ export default class Edit extends React.Component {
       */
      handleSearch = () => {
           const { itemName, items } = this.state;
+          console.log(items)
           items.forEach(item => {
                if (item.itemName === itemName) {
                     this.setState({
@@ -75,7 +89,7 @@ export default class Edit extends React.Component {
                               column: 0,
                               imageName: ''
                          },
-                         itemSent: false,
+                         disableButtons: false,
                          updateItemSuccess: false
                     })
                }
@@ -101,11 +115,11 @@ export default class Edit extends React.Component {
      /* Called from FileUpload component. Retrieves name of file selected and updates state.
      * Need this for when you send the item info (name, quantity, row, column, filename) to server
      */
-     updatedImageUpload = (updatedImageName, updatedImageURL) => {
+     updatedImageUpload = (updatedImageName, currentImageURL) => {
           this.setState(prevState => {
                let updatedItem = Object.assign({}, prevState.updatedItem) // creating copy of state variable updatedItem
                updatedItem.imageName = updatedImageName; // update the imageName property, assign a new value 
-               return { updatedItem, updatedImageURL };
+               return { updatedItem, currentImageURL };
           })
      }
 
@@ -113,23 +127,26 @@ export default class Edit extends React.Component {
      /**
       * Called when 'Update' button is clicked
       * Sends updated values to flask server to update item in db
-      * @returns {boolean} result is true if update was successful, false if not
+      * @returns {Object} 
       */
      updateItem = () => {
           const { itemName, updatedItem } = this.state;
           this.setState({ loading: true })
+          console.log(this.state.items)
+
           axios.post('/updateItem', { itemName, updatedItem })
                .then(res => res.data)
-               .then(result => {
+               .then(updatedItem => {
                     this.setState({
+                         currentItem: utils.singleListToObject(updatedItem),
                          showMsg: true,
-                         updateItemSuccess: result,
+                         updateItemSuccess: true,
                          loading: false,
-                         itemSent: true
+                         disableButtons: true
                     })
                })
                .catch(err => {
-                    this.setState({ showMsg: true, loading: false, itemSent: true })
+                    this.setState({ showMsg: true, loading: false, disableButtons: true, updateItemSuccess: false })
                     console.log(err)
                })
      }
@@ -144,13 +161,13 @@ export default class Edit extends React.Component {
                     imageName: ''
                },
                updateItemSuccess: false,
-               itemSent: false,
+               disableButtons: false,
                showMsg: false
           })
      }
 
      render() {
-          const { items, currentItem, updatedItem, updatedImageURL, searchClicked, showMsg, updateItemSuccess, loading, itemSent } = this.state;
+          const { items, currentItem, updatedItem, searchClicked, showMsg, updateItemSuccess, loading, disableButtons } = this.state;
           return (
                <div id="Edit-component">
                     <section id="edit-info-container">
@@ -172,8 +189,7 @@ export default class Edit extends React.Component {
                               {searchClicked &&
                                    <CurrentItemPreview
                                         currentItem={currentItem}
-                                        updatedImageURL={updateItemSuccess ? updatedImageURL : ''}
-                                        updatedItem={updateItemSuccess ? updatedItem : null}
+
                                    />
                               }
 
@@ -191,7 +207,7 @@ export default class Edit extends React.Component {
                                                   type="text"
                                                   className="input-value-text"
                                                   name="itemName"
-                                                  disabled={itemSent}
+                                                  disabled={disableButtons}
                                                   value={updatedItem.itemName}
                                                   onChange={this.onChangeText}
                                              />
@@ -208,7 +224,7 @@ export default class Edit extends React.Component {
                                                   }
                                                   className="input-value-number"
                                                   name='quantity'
-                                                  disabled={itemSent}
+                                                  disabled={disableButtons}
                                                   value={updatedItem.quantity}
                                                   onChange={this.onChangeInt}
                                              />
@@ -226,7 +242,7 @@ export default class Edit extends React.Component {
                                                   }
                                                   className="input-value-number"
                                                   name='row'
-                                                  disabled={itemSent}
+                                                  disabled={disableButtons}
                                                   value={updatedItem.row}
                                                   inputProps={{ min: 0 }}
                                                   onChange={this.onChangeInt}
@@ -244,7 +260,7 @@ export default class Edit extends React.Component {
                                                   }
                                                   className="input-value-number"
                                                   name='column'
-                                                  disabled={itemSent}
+                                                  disabled={disableButtons}
                                                   value={updatedItem.column}
                                                   inputProps={{ min: 0 }}
                                                   onChange={this.onChangeInt}
@@ -255,7 +271,7 @@ export default class Edit extends React.Component {
                                              <label className="input-label">Image:</label>
                                              < FileUpload
                                                   handleUpload={this.updatedImageUpload}
-                                                  itemSent={itemSent} />
+                                                  itemSent={disableButtons} />
                                         </section>
                                    </section>
                               }
@@ -268,10 +284,10 @@ export default class Edit extends React.Component {
                                              variant="contained"
                                              color="default"
                                              component="span"
-                                             disabled={itemSent}
-                                             className={itemSent ? "update-btn-disabled" : "update-btn-active"}
+                                             disabled={disableButtons}
+                                             className={disableButtons ? "update-btn-disabled" : "update-btn-active"}
                                              onClick={this.updateItem}
-                                             startIcon={itemSent ? <LockIcon /> : ''}
+                                             startIcon={disableButtons ? <LockIcon /> : ''}
                                         >
                                              Update
                                         </Button>
