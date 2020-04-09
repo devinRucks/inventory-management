@@ -40,16 +40,8 @@ export default class Edit extends React.Component {
           this.getAllItems()
      }
 
-     componentDidUpdate = (prevProps, prevState) => {
-          // If there was an update to an item, need to get new item values from DB.
-          // If you don't have this, when you switch between items, it will reload the old values, 
-          // not the updated ones.
-          if (prevState.updatedItem !== this.state.updatedItem) {
-               this.getAllItems()
-          }
-     }
 
-     getAllItems = () => {
+     getAllItems = async () => {
           axios.get('/getAllItems')
                .then(res => res.data)
                .then(result => {
@@ -75,7 +67,6 @@ export default class Edit extends React.Component {
       */
      handleSearch = () => {
           const { itemName, items } = this.state;
-          console.log(items)
           items.forEach(item => {
                if (item.itemName === itemName) {
                     this.setState({
@@ -129,10 +120,10 @@ export default class Edit extends React.Component {
       * Sends updated values to flask server to update item in db
       * @returns {Object} 
       */
-     updateItem = () => {
+     updateItem = async () => {
           const { itemName, updatedItem } = this.state;
           this.setState({ loading: true })
-          console.log(this.state.items)
+          console.log(updatedItem)
 
           axios.post('/updateItem', { itemName, updatedItem })
                .then(res => res.data)
@@ -143,7 +134,7 @@ export default class Edit extends React.Component {
                          updateItemSuccess: true,
                          loading: false,
                          disableButtons: true
-                    })
+                    }, async () => await this.getAllItems())
                })
                .catch(err => {
                     this.setState({ showMsg: true, loading: false, disableButtons: true, updateItemSuccess: false })

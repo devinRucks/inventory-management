@@ -32,13 +32,18 @@ def add_item():
 def update_item():
     item_info = request.get_json()
     app.logger.info(item_info)
-    item_name = item_info.get('itemName')
+    current_item_name = item_info.get('itemName')
     updated_item_dict = item_info.get('updatedItem', {})
-# TODO: after db.updateItem, basically copy '/retrieveItem' in order to send newly updated item values as a response rather than a bool
-# TODO: BASICALLY FOR ALL ROUTES, FIND OUT HOW TO RETURN STATUS CODES RATHER THAN TRUE OR FALSE
+    updated_item_name = updated_item_dict['itemName']
+
     try:
-        db.updateItem(item_name, updated_item_dict)
-        return retrieve_item()
+        db.updateItem(current_item_name, updated_item_dict)
+        if current_item_name != updated_item_name and updated_item_name != '':
+            item = db.searchItem(updated_item_name)
+            return json.dumps(item[0])
+        else:
+            item = db.searchItem(current_item_name)
+            return json.dumps(item[0])
     except:
         app.logger.info("Not able to update item")
         return
