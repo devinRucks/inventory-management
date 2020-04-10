@@ -31,7 +31,7 @@ export default class Edit extends React.Component {
                showMsg: false,
                updateItemSuccess: false,
                loading: false,
-               disableButtons: false
+               disableButtons: false,
           }
      }
 
@@ -123,7 +123,6 @@ export default class Edit extends React.Component {
      updateItem = async () => {
           const { itemName, updatedItem } = this.state;
           this.setState({ loading: true })
-          console.log(updatedItem)
 
           axios.post('/updateItem', { itemName, updatedItem })
                .then(res => res.data)
@@ -262,7 +261,8 @@ export default class Edit extends React.Component {
                                              <label className="input-label">Image:</label>
                                              < FileUpload
                                                   handleUpload={this.updatedImageUpload}
-                                                  itemSent={disableButtons} />
+                                                  itemSent={disableButtons}
+                                             />
                                         </section>
                                    </section>
                               }

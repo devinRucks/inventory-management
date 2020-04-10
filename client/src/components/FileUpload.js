@@ -18,13 +18,12 @@ export default class FileUpload extends React.Component {
      }
 
      sendToFirebase = e => {
-          this.setState({ loading: true })
-
           const file = e.target.files[0]
           const fileName = file.name
           const uploadTask = storageRef.child(fileName).put(file)
 
           const next = (snapshot) => {
+               this.setState({ loading: true })
                const percent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                console.log(`${percent}% done uploading..`)
           }
@@ -39,6 +38,7 @@ export default class FileUpload extends React.Component {
                     // sends filename to parent component to be used when sending data to server
                     this.props.handleUpload(this.state.fileName, this.state.imageURL)
                })
+
           }
 
           uploadTask.on('state_changed',
@@ -53,7 +53,7 @@ export default class FileUpload extends React.Component {
           return (
                <div id="file-upload-container">
                     <div className="image-placeholder">
-                         {(imageURL !== '') &&
+                         {(imageURL !== '' && loading !== true) &&
                               <img className="image" alt="item" src={`${imageURL}`} />
                          }
                          <ClipLoader
