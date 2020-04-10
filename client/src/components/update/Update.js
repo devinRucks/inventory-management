@@ -12,7 +12,7 @@ import * as utils from '../../utils/utils'
 import '../../scss/Main.scss'
 import '../../scss/Edit.scss'
 
-export default class Edit extends React.Component {
+export default class Update extends React.Component {
      constructor(props) {
           super(props);
           this.state = {
