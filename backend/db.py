@@ -36,10 +36,9 @@ def addItem(itemName, quantity, row, column, img_id):
     try:
         db.execute('INSERT INTO inventory(item, quantity, row, column, img_id) VALUES (?,?,?,?,?)',
                    (itemName, quantity, row, column, img_id))
-    # If item already exists, update the item's quantity
-    except:
-        db.execute(
-            'UPDATE inventory SET quantity = quantity + ? WHERE item = ?', (quantity, itemName))
+    # If item already exists, return error
+    except Error as e:
+        print(e)
 
     conn.commit()
     conn.close()

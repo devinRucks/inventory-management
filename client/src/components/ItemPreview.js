@@ -1,13 +1,37 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import ClipLoader from "react-spinners/ClipLoader"
+import * as utils from '../utils/utils'
 import '../scss/ItemPreview.scss'
 
 const ItemPreview = (props) => {
-     const { image, itemName, itemQuantity, itemRow, itemColumn } = props;
+     const { imageName, itemName, itemQuantity, itemRow, itemColumn } = props;
+     const [imageURL, setImageURL] = useState('')
+     const [loading, setLoading] = useState(false)
+
+
+     useEffect(() => {
+          const getImageURL = async () => {
+               setLoading(true)
+               const imageURL = await utils.getFirebaseImageURL(imageName)
+               setLoading(false)
+               setImageURL(imageURL)
+          }
+          getImageURL()
+     }, [imageName])
+
+
      return (
           <div id="itemPreview-container">
                <section id="itemImage-container">
                     <div className="image-placeholder">
-                         <img className="image" alt="item" src={`./images/${image}`} />
+                         {(imageURL !== '' && loading === false) &&
+                              <img className="image" alt="item" src={imageURL} />
+                         }
+                         <ClipLoader
+                              size={60}
+                              color={"#056571"}
+                              loading={loading}
+                         />
                     </div>
                </section>
 

@@ -10,7 +10,7 @@ import LockIcon from '@material-ui/icons/Lock'
 import FadeLoader from "react-spinners/FadeLoader"
 import * as utils from '../../utils/utils'
 import '../../scss/Main.scss'
-import '../../scss/Edit.scss'
+import '../../scss/Update.scss'
 
 export default class Update extends React.Component {
      constructor(props) {

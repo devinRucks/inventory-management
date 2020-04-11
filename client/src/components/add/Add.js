@@ -13,7 +13,7 @@ export default class Add extends React.Component {
                itemQuantity: 0,
                itemRow: 0,
                itemColumn: 0,
-               fileName: '',
+               imageName: '',
                showInputs: false,
                itemExists: false,
                showMsg: false,
@@ -26,7 +26,7 @@ export default class Add extends React.Component {
       * Sends --> 'itemName' to flask server to see if it exists in DB
       * @returns {boolean} result is true if search was successful, false if not
       */
-     handleSubmit = () => {
+     handleSearch = () => {
           const { itemName } = this.state;
           axios.post('/itemSearch', { itemName })
                .then(res => res.data)
@@ -50,8 +50,8 @@ export default class Add extends React.Component {
      /* Called from FileUpload component. Retrieves name of file selected and updates state.
      * Need this for when you send the item info (name, quantity, row, column, filename) to server
      */
-     handleImageUpload = (fileName) => {
-          this.setState({ fileName })
+     handleImageUpload = (imageName) => {
+          this.setState({ imageName })
      }
 
      /**
@@ -60,14 +60,14 @@ export default class Add extends React.Component {
       * @returns {boolean} result is true if adding item was successful, false if not
       */
      addItem = () => {
-          const { itemName, itemQuantity, itemRow, itemColumn, fileName } = this.state;
+          const { itemName, itemQuantity, itemRow, itemColumn, imageName } = this.state;
 
           axios.post('/addItem', {
                itemName,
                itemQuantity,
                itemRow,
                itemColumn,
-               fileName
+               imageName
           })
                .then(res => res.data)
                .then(result => {
@@ -86,45 +86,7 @@ export default class Add extends React.Component {
 
      render() {
           const { itemRow, itemColumn, itemQuantity, showInputs, itemExists, addItemSuccess, showMsg } = this.state
-          /**
-           * If the item is new, display inputs for the row and column
-           * @returns {JSX} 
-           */
-          const renderNewItemInfo = () => {
-               if (!itemExists) {
-                    return (
-                         <>
-                              <div id="input-container">
-                                   <label className="info-label">Row:</label>
-                                   <Input
-                                        type="number"
-                                        className="info-input number"
-                                        name='itemRow'
-                                        value={itemRow}
-                                        inputProps={{ min: 0 }}
-                                        onChange={this.onChange}
-                                   />
-                              </div>
 
-                              <div id="input-container">
-                                   <label className="info-label">Column:</label>
-                                   <Input
-                                        type="number"
-                                        className="info-input number"
-                                        name='itemColumn'
-                                        value={itemColumn}
-                                        inputProps={{ min: 0 }}
-                                        onChange={this.onChange}
-                                   />
-                              </div>
-                              <section id="upload-container">
-                                   <label className="label">Add Item Picture? </label>
-                                   <FileUpload handleUpload={this.handleImageUpload} />
-                              </section>
-                         </>
-                    )
-               }
-          }
           return (
                <div id="Add-component">
                     <section id="item-info-container">
@@ -139,13 +101,13 @@ export default class Add extends React.Component {
                                    variant="contained"
                                    className="submit-btn"
                                    color="primary"
-                                   onClick={this.handleSubmit}
+                                   onClick={this.handleSearch}
                               >
                                    Search
                               </Button>
                          </div>
 
-                         {showInputs &&
+                         {(showInputs && !itemExists) &&
                               <>
                                    <div id="input-container">
                                         <label className="info-label">Quantity:</label>
@@ -159,7 +121,34 @@ export default class Add extends React.Component {
                                         />
                                    </div>
 
-                                   {renderNewItemInfo()}
+                                   <div id="input-container">
+                                        <label className="info-label">Row:</label>
+                                        <Input
+                                             type="number"
+                                             className="info-input number"
+                                             name='itemRow'
+                                             value={itemRow}
+                                             inputProps={{ min: 0 }}
+                                             onChange={this.onChange}
+                                        />
+                                   </div>
+
+                                   <div id="input-container">
+                                        <label className="info-label">Column:</label>
+                                        <Input
+                                             type="number"
+                                             className="info-input number"
+                                             name='itemColumn'
+                                             value={itemColumn}
+                                             inputProps={{ min: 0 }}
+                                             onChange={this.onChange}
+                                        />
+                                   </div>
+                                   <section id="upload-container">
+                                        <label className="label">Add Item Picture? </label>
+                                        <FileUpload handleUpload={this.handleImageUpload} />
+                                   </section>
+
                                    <div id="input-container">
                                         <Button
                                              variant="contained"
@@ -173,6 +162,11 @@ export default class Add extends React.Component {
                               </>
                          }
                          {showMsg && < AddItemMsg addSuccess={addItemSuccess} />}
+                         {(showInputs && itemExists) &&
+                              <h4 className="item-exists-msg">
+                                   Error: Item Already Exists
+                              </h4>
+                         }
                     </section>
                </div>
           );

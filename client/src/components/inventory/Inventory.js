@@ -38,7 +38,7 @@ export default class Inventory extends React.Component {
                     {items.map((item, index) =>
                          < ItemPreview
                               key={index}
-                              image={item.imageName}
+                              imageName={item.imageName}
                               itemName={item.name}
                               itemQuantity={item.quantity}
                               itemRow={item.row}

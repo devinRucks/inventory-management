@@ -27,12 +27,15 @@
           align-items: center;
 
           .image-placeholder {
+               display: flex;
+               justify-content: center;
+               align-items: center;
                position: relative;
                height: 115px;
                width: 115px;
                overflow: hidden;
                border: 1px #333 solid;
-               border-radius: 50%;
+               border-radius: 20px;
 
                .image {
                     object-fit: cover;
