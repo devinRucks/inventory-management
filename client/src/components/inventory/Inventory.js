@@ -37,12 +37,18 @@ const Inventory = () => {
      }
 
      const deleteItem = () => {
-          // make API call to delete item
-          // if success, run the below code
-          const newItemSet = items.filter(item => {
-               return item.itemName !== itemToDelete;
-          });
-          setItems(newItemSet)
+          axios.post('/deleteItem', { itemToDelete })
+               .then(res => res.status)
+               .then(status => {
+                    if (status === 200) {
+                         const newItemSet = items.filter(item => {
+                              return item.itemName !== itemToDelete;
+                         });
+                         setItems(newItemSet)
+                    }
+               })
+               .catch(err => console.log(err))
+
      }
 
      return (

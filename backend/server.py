@@ -27,6 +27,20 @@ def add_item():
     return 'OK'
 
 
+@app.route('/deleteItem', methods=['GET', 'POST'])
+def delete_item():
+    item_info = request.get_json()
+    item_name = item_info.get('itemToDelete')
+
+    try:
+        db.deleteItem(item_name)
+        return "Successfully deleted item", 200
+    except:
+        return "Not able to delete item", 400
+
+    return 'OK'
+
+
 @app.route('/updateItem', methods=['GET', 'POST'])
 def update_item():
     item_info = request.get_json()

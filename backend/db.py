@@ -44,6 +44,19 @@ def addItem(itemName, quantity, row, column, img_id):
     conn.close()
 
 
+def deleteItem(item_name):
+    conn = makeConnection()
+    db = conn.cursor()
+    print(item_name)
+    try:
+        db.execute('DELETE FROM inventory WHERE item = ?', [item_name])
+    except Error as e:
+        print(e)
+
+    conn.commit()
+    conn.close()
+
+
 def updateItem(item_name, updated_item):
     conn = makeConnection()
     db = conn.cursor()
