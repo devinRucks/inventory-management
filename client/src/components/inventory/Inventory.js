@@ -52,7 +52,25 @@ const Inventory = () => {
      }
 
      return (
-          <div id="Inventory-component">
+          <div id="inventory-component">
+               <section id="inventory-label-container">
+                    <div className="inventory-label item">
+                         Item
+                         <hr className="horizontal-row"></hr>
+                    </div>
+                    <div className="inventory-label quantity">
+                         Quantity
+                         <hr className="horizontal-row"></hr>
+                    </div>
+                    <div className="inventory-label row">
+                         Row
+                         <hr className="horizontal-row"></hr>
+                    </div>
+                    <div className="inventory-label column">
+                         Column
+                         <hr className="horizontal-row"></hr>
+                    </div>
+               </section>
                {items.map((item, index) =>
                     < ItemPreview
                          key={index}

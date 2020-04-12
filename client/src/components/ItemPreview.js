@@ -32,7 +32,7 @@ const ItemPreview = (props) => {
                               <img className="image" alt="item" src={imageURL} />
                          }
                          <ClipLoader
-                              size={60}
+                              size={40}
                               color={"#056571"}
                               loading={loading}
                          />
@@ -44,25 +44,19 @@ const ItemPreview = (props) => {
                </section>
 
                <section id="itemQuantity-container">
-                    <div className="quantity-title">Quantity</div>
-                    <hr className="horizontal-row"></hr>
                     <div className="itemQuantity"> {itemQuantity} </div>
                </section>
 
                <section id="itemRow-container">
-                    <div className="row-title">Row</div>
-                    <hr className="horizontal-row"></hr>
                     <div className="itemRow"> {itemRow} </div>
                </section>
 
                <section id="itemColumn-container">
-                    <div className="column-title">Column</div>
-                    <hr className="horizontal-row"></hr>
                     <div className="itemColumn"> {itemColumn} </div>
                </section>
 
                <div id="delete-icon">
-                    <CancelIcon onClick={onDeleteClick} />
+                    <CancelIcon fontSize="small" onClick={onDeleteClick} />
                </div>
           </div>
      )

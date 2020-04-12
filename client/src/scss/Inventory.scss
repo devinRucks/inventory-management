@@ -1,5 +1,39 @@
-#Inventory-component {
-     padding: 30px 35px;
+#inventory-component {
+     border: 2px solid black;
+     margin: 30px 35px;
+     padding: 10px 35px;
      overflow-y: auto;
-     height: 100vh;
+     height: 70vh;
+     max-width: 625px;
+
+     #inventory-label-container {
+          display: grid;
+          grid-template-areas: "item quantity row column";
+          grid-template-columns: 1.5fr .5fr .5fr .5fr;
+          // border: 1px red solid;
+          height: 60px;
+          width: 100%;
+          
+          .inventory-label {
+               display: flex;
+               flex-direction: column;
+               justify-content: center;
+               align-items: center;
+               // border: 1px green solid;
+               font-size: 20px;
+
+               .horizontal-row {
+                    background-color: black;
+                    margin: 3px 0px;
+                    border: none;
+                    width: 60px;
+                    height: 2px;
+               }
+          }
+
+          .item { grid-area: item; margin-right: 140px;}
+          .quantity { grid-area: quantity }
+          .row { grid-area: row }
+          .column { grid-area: column }
+     }
 }
