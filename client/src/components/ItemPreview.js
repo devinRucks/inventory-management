@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import ClipLoader from "react-spinners/ClipLoader"
+import CancelIcon from '@material-ui/icons/Cancel';
 import * as utils from '../utils/utils'
 import '../scss/ItemPreview.scss'
 
@@ -19,6 +20,9 @@ const ItemPreview = (props) => {
           getImageURL()
      }, [imageName])
 
+     const onDeleteClick = () => {
+          props.handleDeleteClick(itemName)
+     }
 
      return (
           <div id="itemPreview-container">
@@ -56,6 +60,10 @@ const ItemPreview = (props) => {
                     <hr className="horizontal-row"></hr>
                     <div className="itemColumn"> {itemColumn} </div>
                </section>
+
+               <div id="delete-icon">
+                    <CancelIcon onClick={onDeleteClick} />
+               </div>
           </div>
      )
 }

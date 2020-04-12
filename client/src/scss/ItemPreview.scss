@@ -1,5 +1,6 @@
 #itemPreview-container {
      border: 1px #333 solid;
+     position: relative;
      display: grid;
      grid-template-areas: "image name quantity row column";
      grid-template-columns: .5fr .5fr 1fr 1fr 1fr;
@@ -9,7 +10,7 @@
      height: 150px;
 
      &:hover {
-          transform: scale(1.02)
+          transform: scale(1.01)
      }
 
      .horizontal-row {
@@ -107,5 +108,13 @@
           .itemColumn {
                font-size: 21px;
           }
+     }
+
+     #delete-icon {
+          position: absolute;
+          cursor: pointer;
+          border: 1px red solid;
+          top: 0;
+          right: 0;
      }
 }

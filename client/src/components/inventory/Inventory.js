@@ -1,52 +1,82 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import ItemPreview from '../ItemPreview'
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
 import '../../scss/Inventory.scss'
 import * as utils from '../../utils/utils'
 
-export default class Inventory extends React.Component {
-     constructor(props) {
-          super(props);
-          this.state = {
-               items: [],
-               imageData: null,
-               imageIds: []
+const Inventory = () => {
+     const [items, setItems] = useState([])
+     const [modalOpen, setModalOpen] = useState(false)
+     const [itemToDelete, setItemToDelete] = useState('')
+
+     useEffect(() => {
+          const getAllItems = async () => {
+               axios.get('/getAllItems')
+                    .then(res => res.data)
+                    .then(result => {
+                         setItems(utils.nestedListsToArrayOfObjects(result))
+                    })
           }
+          getAllItems()
+     }, [])
+
+     const openModal = (itemName) => {
+          setModalOpen(true)
+          setItemToDelete(itemName)
      }
 
-
-     componentDidMount = () => { this.getAllItems() }
-
-
-     /** Called when component mounts. Gets all items from db */
-     getAllItems = () => {
-          axios.get('/getAllItems')
-               .then(res => res.data)
-               .then(result => {
-                    if (result) {
-                         this.setState({
-                              items: utils.nestedListsToArrayOfObjects(result)
-                         })
-                    }
-               })
+     const closeModal = (value) => {
+          if (value === 'agree') {
+               deleteItem()
+          }
+          setModalOpen(false)
      }
 
-     render() {
-          const { items } = this.state
-          return (
-               <div id="Inventory-component">
-                    {items.map((item, index) =>
-                         < ItemPreview
-                              key={index}
-                              imageName={item.imageName}
-                              itemName={item.name}
-                              itemQuantity={item.quantity}
-                              itemRow={item.row}
-                              itemColumn={item.column}
-                         />
-                    )}
-               </div>
-
-          )
+     const deleteItem = () => {
+          // make API call to delete item
+          // if success, run the below code
+          const newItemSet = items.filter(item => {
+               return item.itemName !== itemToDelete;
+          });
+          setItems(newItemSet)
      }
+
+     return (
+          <div id="Inventory-component">
+               {items.map((item, index) =>
+                    < ItemPreview
+                         key={index}
+                         imageName={item.imageName}
+                         itemName={item.itemName}
+                         itemQuantity={item.quantity}
+                         itemRow={item.row}
+                         itemColumn={item.column}
+                         handleDeleteClick={openModal}
+                    />
+               )}
+               <Dialog
+                    open={modalOpen}
+                    aria-labelledby="alert-dialog-title"
+               >
+                    <DialogTitle
+                         id="alert-dialog-title">{"Are you sure you want to permanently delete this item?"}
+                    </DialogTitle>
+                    <DialogActions>
+                         <Button onClick={() => closeModal('disagree')} color="primary">
+                              Disagree
+                    </Button>
+                         <Button onClick={() => closeModal('agree')} color="primary" autoFocus>
+                              Agree
+                    </Button>
+                    </DialogActions>
+               </Dialog>
+          </div>
+
+     )
 }
+
+export default Inventory
