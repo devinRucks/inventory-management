@@ -21,9 +21,11 @@ def add_item():
 
     try:
         db.addItem(item_name, item_quantity, item_row, item_column, image_name)
-        return json.dumps(True)
+        return "Successfully added item", 200
+        # return json.dumps(True)
     except:
-        return json.dumps(False)
+        return "Error: Item already exists", 400
+        # return json.dumps(False)
     return 'OK'
 
 

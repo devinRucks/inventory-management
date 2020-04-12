@@ -69,13 +69,14 @@ export default class Add extends React.Component {
                itemColumn,
                imageName
           })
-               .then(res => res.data)
-               .then(result => {
-                    this.setState({
-                         showInputs: false,
-                         addItemSuccess: result,
-                         showMsg: true
-                    })
+               .then(res => res.status)
+               .then(status => {
+                    if (status === 200) {
+                         this.setState({ addItemSuccess: true })
+                    } else {
+                         this.setState({ addItemSuccess: false })
+                    }
+                    this.setState({ showInputs: false, showMsg: true })
                })
                .catch(err => {
                     this.setState({ showMsg: true })
