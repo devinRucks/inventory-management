@@ -1,4 +1,3 @@
-
 import { storageRef } from '../firebaseConfig'
 
 
@@ -18,6 +17,11 @@ const getFirebaseImageURL = (imageName) => {
                return url
           })
      return imageURL
+}
+
+// test to see if object is populated
+const populatedObj = (obj) => {
+     return Object.keys(obj).length !== 0;
 }
 
 // takes in list of lists from flask server and returns array of objects
@@ -41,11 +45,6 @@ const singleListToObject = (list) => {
           itemObj[key] = list[index]
      })
      return itemObj
-     // const result = list.map(([name, quantity, row, column, imageId]) => (
-     //      { name, quantity, row, column, imageId }
-     // ))
-
-     // return result
 }
 
 export {
@@ -53,6 +52,7 @@ export {
      validItemValueStyle,
      invalidItemValueStyle,
      getFirebaseImageURL,
+     populatedObj,
      nestedListsToArrayOfObjects,
      singleListToObject
 }

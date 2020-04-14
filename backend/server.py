@@ -3,6 +3,7 @@ from flask import Flask, flash, request, redirect, url_for, send_from_directory,
 from flask.json import jsonify
 import json
 import db
+# from LEDcontroller import setup, turnOnLED, turnOffLED, destroy
 
 
 app = Flask(__name__)
@@ -111,6 +112,28 @@ def retrieve_item():
     return 'OK'
 
 
+@app.route('/activateLED', methods=['GET', 'POST'])
+def activate_led():
+    data = request.get_json()
+    led_on = data.get('ledOn')
+    item_column = data.get('column')
+    item_row = data.get('row')
+
+    # if led_on:
+    #     turnOnLED(item_row, item_column)
+    # else:
+    #     turnOffLED(item_row, item_column)
+
+    app.logger.info(item_column)
+    app.logger.info(item_row)
+    return 'OK'
+
+
 if __name__ == '__main__':
-    db.createTable()
-    app.run(debug=True, host='localhost', port=8000)
+    try:
+        db.createTable()
+        # setup()
+        app.run(debug=True, host='localhost', port=8000)
+    except KeyboardInterrupt:
+        print("Program ended")
+        # destroy()

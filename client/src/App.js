@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.scss';
+import Locate from './components/locate/Locate'
 import Add from './components/add/Add'
 import Update from './components/update/Update'
 import Inventory from './components/inventory/Inventory';
@@ -39,6 +40,7 @@ class App extends React.Component {
                     )}
                 </section>
                 <section id="content-container">
+                    {this.tabActive('Locate') && < Locate />}
                     {this.tabActive('Add') && < Add />}
                     {this.tabActive('Update') && < Update />}
                     {this.tabActive('View Inventory') && < Inventory />}
