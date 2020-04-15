@@ -28,22 +28,24 @@ class App extends React.Component {
         const { tabs, activeTab } = this.state;
         return (
             <div id="App">
-                <section id="sidebar-container">
-                    {tabs.map((tab, index) =>
-                        <div className="tab"
-                            key={index}
-                            id={tab}
-                            style={activeTab === tab ? utils.tabSelectedStyling : {}}
-                            onClick={this.handleTabClick}>
-                            {tab}
-                        </div>
-                    )}
-                </section>
-                <section id="content-container">
-                    {this.tabActive('Locate') && < Locate />}
-                    {this.tabActive('Add') && < Add />}
-                    {this.tabActive('Update') && < Update />}
-                    {this.tabActive('View Inventory') && < Inventory />}
+                <section id="center-content">
+                    <section id="sidebar-container">
+                        {tabs.map((tab, index) =>
+                            <div className="tab"
+                                key={index}
+                                id={tab}
+                                style={activeTab === tab ? utils.tabSelectedStyling : {}}
+                                onClick={this.handleTabClick}>
+                                {tab}
+                            </div>
+                        )}
+                    </section>
+                    <section id="content-container">
+                        {this.tabActive('Locate') && < Locate />}
+                        {this.tabActive('Add') && < Add />}
+                        {this.tabActive('Update') && < Update />}
+                        {this.tabActive('View Inventory') && < Inventory />}
+                    </section>
                 </section>
             </div >
         );

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import ItemSelect from '../ItemSelect'
 import CurrentItemPreview from '../CurrentItemPreview'
 import { Button } from '@material-ui/core'
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import axios from 'axios'
 import * as utils from '../../utils/utils'
 import '../../scss/Main.scss'
@@ -13,7 +15,7 @@ const Locate = () => {
      const [ledOn, setLedOn] = useState(false)
 
      useEffect(() => {
-          const getAllItems = async () => {
+          const getAllItems = () => {
                axios.get('/getAllItems')
                     .then(res => res.data)
                     .then(result => {
@@ -21,27 +23,39 @@ const Locate = () => {
                     })
           }
           getAllItems()
+          setLedOn(false)
      }, [itemName])
 
-     const selectedItemValue = (itemName) => { setItemName(itemName) }
+
+     useEffect(() => {
+          const sendLedData = () => {
+               axios.post('/activateLED', {
+                    ledOn: ledOn,
+                    column: currentItem.column,
+                    row: currentItem.row
+               })
+                    .then(res => res.status)
+                    .then(status => console.log(status))
+                    .catch(err => console.log(err))
+          }
+          sendLedData()
+     }, [ledOn, currentItem])
+
+
+     const selectedItemValue = itemName => setItemName(itemName)
+
 
      const handleLocate = () => {
           items.forEach(item => {
-               if (item.itemName === itemName) setCurrentItem(item)
+               if (item.itemName === itemName) {
+                    setCurrentItem(item)
+               }
           })
      }
 
-     const activateLED = () => {
-          setLedOn(!ledOn)
-          axios.post('/activateLED', {
-               ledOn: ledOn,
-               column: currentItem.column,
-               row: currentItem.row
-          })
-               .then(res => res.status)
-               .then(status => console.log(status))
-               .catch(err => console.log(err))
-     }
+
+     const changeLedState = () => setLedOn(!ledOn)
+
 
      return (
           <div id="Locate-component">
@@ -65,8 +79,12 @@ const Locate = () => {
                               < CurrentItemPreview
                                    currentItem={currentItem}
                               />
-                              <h1>Active LED? </h1>
-                              <button onClick={activateLED}>Turn On LED</button>
+                              <FormControlLabel
+                                   value="start"
+                                   control={<Checkbox className="checkbox" checked={ledOn} onChange={changeLedState} />}
+                                   label="Locate Item"
+                                   labelPlacement="start"
+                              />
                          </section>
                     }
                </div>
