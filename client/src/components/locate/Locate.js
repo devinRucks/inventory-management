@@ -28,7 +28,6 @@ const Locate = () => {
 
 
      useEffect(() => {
-          console.log(ledOn)
           const sendLedData = () => {
                axios.post('/activateLED', {
                     ledOn: ledOn,
