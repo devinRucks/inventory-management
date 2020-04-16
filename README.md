@@ -16,7 +16,11 @@
 ## View Live Site
 [Visit Here](https://my-react-weatherapp.herokuapp.com/)
 # Demo
+## Locate Tab
 ![](Locate-tab.gif)
+## Add Tab
 ![](Add-tab.gif)
+## Update Tab
 ![](Update-tab.gif)
+## View Inventory Tab
 ![](ViewInventory-tab.gif)
