@@ -17,10 +17,10 @@
 [Visit Here](https://my-react-weatherapp.herokuapp.com/)
 # Demo
 ## Locate
-![](Locate-tab.gif)
+![](/gifs/Locate-tab.gif)
 ## Add
-![](Add-tab.gif)
+![](/gifs/Add-tab.gif)
 ## Update
-![](Update-tab.gif)
+![](/gifs/Update-tab.gif)
 ## View Inventory
-![](ViewInventory-tab.gif)
+![](/gifs/ViewInventory-tab.gif)
