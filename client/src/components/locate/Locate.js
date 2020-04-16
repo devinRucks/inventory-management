@@ -28,6 +28,7 @@ const Locate = () => {
 
 
      useEffect(() => {
+          console.log(ledOn)
           const sendLedData = () => {
                axios.post('/activateLED', {
                     ledOn: ledOn,
@@ -54,7 +55,11 @@ const Locate = () => {
      }
 
 
-     const changeLedState = () => setLedOn(!ledOn)
+     const changeLedState = () => {
+          if (itemName === currentItem.itemName) {
+               setLedOn(!ledOn)
+          }
+     }
 
 
      return (
