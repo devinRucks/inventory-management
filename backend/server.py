@@ -3,7 +3,7 @@ from flask import Flask, flash, request, redirect, url_for, send_from_directory,
 from flask.json import jsonify
 import json
 import db
-# from LEDcontroller import setup, turnOnLED, turnOffLED, destroy
+from LEDcontroller import setup, turnOnLED, turnOffLED, destroy
 
 
 app = Flask(__name__)
@@ -119,21 +119,19 @@ def activate_led():
     item_column = data.get('column')
     item_row = data.get('row')
 
-    # if led_on:
-    #     turnOnLED(item_row, item_column)
-    # else:
-    #     turnOffLED(item_row, item_column)
+    if led_on:
+        turnOnLED(item_row, item_column)
+    else:
+        turnOffLED(item_row, item_column)
 
-    app.logger.info(item_column)
-    app.logger.info(item_row)
     return 'OK'
 
 
 if __name__ == '__main__':
     try:
         db.createTable()
-        # setup()
+        setup()
         app.run(debug=True, host='localhost', port=8000)
     except KeyboardInterrupt:
         print("Program ended")
-        # destroy()
+        destroy()
