@@ -16,4 +16,7 @@
 ## View Live Site
 [Visit Here](https://my-react-weatherapp.herokuapp.com/)
 # Demo
-![](weatherApp-demo.gif)
+![](Locate-tab.gif)
+![](Add-tab.gif)
+![](Update-tab.gif)
+![](ViewInventory-tab.gif)
