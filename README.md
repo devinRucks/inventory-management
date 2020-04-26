@@ -22,8 +22,9 @@
 ## Built With
 * [React](https://reactjs.org/) - Client
 * [Flask](https://flask.palletsprojects.com/en/1.1.x/) - Server
-* [Firebase Storage] - Storage For Images
+* Firebase Storage - Storage For Images
 * [Sqlite3](https://www.sqlite.org/index.html) - Stores Data On Raspberry Pi 
+* Raspberry Pi 3B+
 
 
 # Demo
